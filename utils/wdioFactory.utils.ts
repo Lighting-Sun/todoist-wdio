@@ -1,4 +1,5 @@
-import { $ } from '@wdio/globals'
+import { $, $$ } from '@wdio/globals'
+
 
 
 interface ObjElement {
@@ -60,5 +61,15 @@ export default class WdioFactoryUtils {
         const elementDescription = objElement.description;
         await elementSelector.waitForDisplayed({timeoutMsg: `Element ${elementDescription} is not found before timeout`});
         return await elementSelector.getText();
+    }
+
+    /**
+     * Returns selectors of elements
+     * @param objElement an object containing the selector and description elements
+     * @returns an array of selectors
+    */
+    public async getElements(objElement: ObjElement): Promise<any[]> {
+        const elementsSelector: any[] = await $$(objElement.selector);
+        return elementsSelector;
     }
 }
