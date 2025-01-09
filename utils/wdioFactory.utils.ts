@@ -65,11 +65,24 @@ export default class WdioFactoryUtils {
 
     /**
      * Returns selectors of elements
-     * @param objElement an object containing the selector and description elements
+     * @param objElements an object containing the selector and description elements
      * @returns an array of selectors
     */
-    public async getElements(objElement: ObjElement): Promise<any[]> {
-        const elementsSelector: any[] = await $$(objElement.selector);
+    public async getElements(objElements: ObjElement): Promise<any[]> {
+        const elementsSelector: any[] = await $$(objElements.selector);
         return elementsSelector;
     }
+
+    /**
+     * Returns the text of elements
+     * @param objElements an object containing the selector and description elements
+     * @returns an array of texts
+     */
+    public async getTextFromElements(objElements: ObjElement): Promise<string[]> {
+        const elements = await this.getElements(objElements);
+        const elementsText: string[] = await Promise.all( elements.map(async (element) => { return await element.getText()}))
+        return elementsText;
+    }
+
+    
 }
