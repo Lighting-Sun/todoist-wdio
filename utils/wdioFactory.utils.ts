@@ -36,4 +36,16 @@ export default class WdioFactoryUtils {
     }
 
 
+    /**
+     * sets the value of an element
+     * @param objElement an object containing the selector and description of the element
+     * @param srtValueToSend the value to set
+     */
+    public async setValue(objElement: ObjElement, srtValueToSend: string): Promise<void> {
+        const elementSelector = $(objElement.selector);
+        const elementDescription = objElement.description;
+        await elementSelector.waitForEnabled({timeoutMsg: `Element ${elementDescription} is not enabled before timeout`});
+        await this.click(objElement)
+        await elementSelector.setValue(srtValueToSend);
+    }
 }
