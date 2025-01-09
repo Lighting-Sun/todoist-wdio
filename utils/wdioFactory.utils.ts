@@ -84,5 +84,19 @@ export default class WdioFactoryUtils {
         return elementsText;
     }
 
-    
+
+    /**
+     * Clicks on all elements that match the selector
+     * @param objElement an object containing the selector and description of the element
+     */
+    public async clickAllIfExist(objElement: ObjElement): Promise<void> {
+        let element = await $(objElement.selector);
+        let isClickable = await element.waitForClickable({timeout: 1000}).catch(() => false);
+
+        while(isClickable) {
+            await element.click();
+            element = await $(objElement.selector);
+            isClickable = await element.waitForClickable({timeout: 1000}).catch(() => false);
+        }
+    }
 }
