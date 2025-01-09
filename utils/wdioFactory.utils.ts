@@ -48,4 +48,17 @@ export default class WdioFactoryUtils {
         await this.click(objElement)
         await elementSelector.setValue(srtValueToSend);
     }
+
+
+    /**
+     * Returns the text of an element
+     * @param objElement an object containing the selector and description of the element
+     * @returns the text of the element
+     */
+    public async getText(objElement: ObjElement): Promise<string> {
+        const elementSelector = $(objElement.selector);
+        const elementDescription = objElement.description;
+        await elementSelector.waitForDisplayed({timeoutMsg: `Element ${elementDescription} is not found before timeout`});
+        return await elementSelector.getText();
+    }
 }
