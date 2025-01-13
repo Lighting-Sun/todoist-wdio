@@ -99,4 +99,19 @@ export default class WdioFactoryUtils {
             isClickable = await element.waitForClickable({timeout: 1000}).catch(() => false);
         }
     }
+
+    /**
+     * Returns the value of an attribute of an element
+     * @param objElement an object containing the selector and description of the element
+     * @param attribute the attribute to get the value
+     * @returns the value of the attribute
+     */
+    //TODO this method is experimental, need to be tested
+    public async getElementAttributeText(objElement: ObjElement, attribute: string) : Promise<string> {
+        const elementSelector = $(objElement.selector);
+        const elementDescription = objElement.description;
+        await elementSelector.waitForEnabled({timeoutMsg: `Element ${elementDescription} is not enabled before timeout`});
+        return elementSelector.getAttribute(attribute);
+    }
+
 }
