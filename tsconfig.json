@@ -23,6 +23,10 @@
         "noUnusedParameters": true,
         "noFallthroughCasesInSwitch": true
     },
+    "scripts": {
+        "test": "npx wdio",
+        "wdio": "wdio run ./wdio.conf.ts"
+    },
     "include": [
         "test",
         "wdio.conf.ts"

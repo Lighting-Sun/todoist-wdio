@@ -8,7 +8,7 @@ class LoginPage extends Page {
 
     locators = {
         loginButton:{
-            selector: "button[data-gtm-id]",
+            selector: "button[type='button']",
             description: "Login button"
         },
         emailInput:{
@@ -27,7 +27,7 @@ class LoginPage extends Page {
      * @returns Promise<void>
      */
     async openPage (): Promise<void> {
-        await this.open(browser.options.baseUrl!);
+        await this.open(browser.options.baseUrl! + '/auth/login');
     }
 
     /**
