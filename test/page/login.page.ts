@@ -8,7 +8,7 @@ class LoginPage extends Page {
 
     locators = {
         loginButton:{
-            selector: "button[data-gtm-id]",
+            selector: "button[type='submit']",
             description: "Login button"
         },
         emailInput:{
@@ -18,8 +18,15 @@ class LoginPage extends Page {
         passwordInput:{
             selector: "input[type='password']",
             description: "Password input"
+        },
+        loginErrorMessage:{
+            selector: "//input[@type='email']/../../../preceding-sibling::div",
+            description: "Login error message"
+        },
+        passwordErrorMessage:{
+            selector: "//input[@type='password']/../../following-sibling::div",
+            description: "Password error message"
         }
-
     }
 
     /**
@@ -27,7 +34,7 @@ class LoginPage extends Page {
      * @returns Promise<void>
      */
     async openPage (): Promise<void> {
-        await this.open(browser.options.baseUrl!);
+        await this.open(browser.options.baseUrl! + '/auth/login');
     }
 
     /**
@@ -65,6 +72,14 @@ class LoginPage extends Page {
     async loginToPage(email: string, password: string): Promise<void> {
         await this.fillEmail(email);
         await this.fillPassword(password);
+    }
+
+    async getLoginErrorMessageText(): Promise<string> {
+        return await this.wDioFactoryUtils.getText(this.locators.loginErrorMessage);
+    }
+
+    async getPasswordErrorMessageText(): Promise<string> {
+        return await this.wDioFactoryUtils.getText(this.locators.passwordErrorMessage);
     }
 }
 
