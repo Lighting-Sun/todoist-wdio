@@ -1,6 +1,9 @@
 import Page from "./page";
+import Sidebar from "../components/sidebar.component";
 
 class TodayPage extends Page{
+
+    sidebar = new Sidebar();
 
     locators = {
         todayPage:{
