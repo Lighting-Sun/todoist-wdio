@@ -72,6 +72,7 @@ class LoginPage extends Page {
     async loginToPage(email: string, password: string): Promise<void> {
         await this.fillEmail(email);
         await this.fillPassword(password);
+        await this.clickLoginButton();
     }
 
     async getLoginErrorMessageText(): Promise<string> {

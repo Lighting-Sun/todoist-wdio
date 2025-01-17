@@ -1,4 +1,5 @@
 import loginPage from "../page/login.page";
+import todayPage from "../page/today.page";
 
 
 describe('Login scenarios', () => {
@@ -9,6 +10,7 @@ describe('Login scenarios', () => {
         await loginPage.fillEmail('cortesharveyw@gmail.com');
         await loginPage.fillPassword('Cortes10');
         await loginPage.clickLoginButton();
+        await expect(await todayPage.getTodayPageTitleText()).toEqual('Today');
     });
 
     it('Should fail login into todoist app when email is missing', async () => {

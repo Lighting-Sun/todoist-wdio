@@ -50,6 +50,21 @@ export default class WdioFactoryUtils {
         await elementSelector.setValue(srtValueToSend);
     }
 
+    /**
+     * sets the value of an element by using the sendKeys method from wdio
+     * @param objElement an object containing the selector and description of the element
+     * @param srtValueToSend the value to set
+     */
+        public async setValueByKeys(objElement: ObjElement, srtValueToSend: string): Promise<void> {
+            const elementSelector = $(objElement.selector);
+            const elementDescription = objElement.description;
+            await elementSelector.waitForEnabled({timeoutMsg: `Element ${elementDescription} is not enabled before timeout`});
+            await this.click(objElement)
+            for (const characters of srtValueToSend) {
+                await browser.keys(characters);
+            }
+        }
+
 
     /**
      * Returns the text of an element

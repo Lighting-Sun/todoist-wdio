@@ -4,7 +4,7 @@ class Sidebar extends BaseComponent{
 
     locators = {
         addTaskButton:{
-            selector: "//button/span[text()='Add task']",
+            selector: "//button/span[text()='Add task']//ancestor::button",
             description: "Add task button"
         }
     }

@@ -1,9 +1,11 @@
 import Page from "./page";
 import Sidebar from "../components/sidebar.component";
+import AddTaskPopUp from "../components/addTaskPopUp.component";
 
 class TodayPage extends Page{
 
     sidebar = new Sidebar();
+    addTaskPopUp = new AddTaskPopUp();
 
     locators = {
         todayPage:{
