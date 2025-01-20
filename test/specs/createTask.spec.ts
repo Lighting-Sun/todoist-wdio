@@ -3,6 +3,8 @@ import todayPage from "../page/today.page";
 import UtilsMethods from '../../utils/utilsMethods.utils';
 import casual from "casual";
 
+const userEmail = process.env.USEREMAIL!;
+const userPassword = process.env.USERPASSWORD!;
 
 describe('Login scenarios', () => {
 
@@ -15,7 +17,7 @@ describe('Login scenarios', () => {
         console.log('taskDescription: ', taskDescription);
 
         await loginPage.openPage();
-        await loginPage.loginToPage('cortesharveyw@gmail.com','Cortes10');
+        await loginPage.loginToPage(userEmail, userPassword);
         await todayPage.sidebar.clickAddTaskButton();
         await todayPage.addTaskPopUp.fillTaskName(taskName);
         await todayPage.addTaskPopUp.fillTaskDescription(taskDescription);
@@ -29,10 +31,9 @@ describe('Login scenarios', () => {
         const taskDescriptions = await UtilsMethods.getArrayOfRandomStrings(10);
 
         await loginPage.openPage();
-        await loginPage.loginToPage('cortesharveyw@gmail.com','Cortes10');
+        await loginPage.loginToPage(userEmail, userPassword);
         await todayPage.createMultipleTasksByTaskNameAndDescription(taskNames, taskDescriptions);
 
-        
     });
 
 });
