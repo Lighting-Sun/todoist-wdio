@@ -21,10 +21,15 @@ class TodayPage extends Page{
             selector: "//div[@class='task_content'][text()='${value}']/ancestor::div[@class='task_list_item__content']//div[@class='task_description']",
             description: "Task description input"
         },
-        tasks:{
-            selector: "//div[@class='task_list_item__content']",
-            description: "Tasks"
-        }
+        todayTasksNames:{
+            selector: "//section[contains(@aria-label,'Today')]//div[@class='task_list_item__content']//div[@class='task_content']",
+            description: "Tasks names"
+        },
+        todayTasksDescriptions:{
+            selector: "//section[contains(@aria-label,'Today')]//div[@class='task_list_item__content']//div[@class='task_description']",
+            description: "Tasks descriptions"
+        },
+
     }
 
     /**
