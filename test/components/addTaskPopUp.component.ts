@@ -23,7 +23,7 @@ class AddTaskPopUp extends BaseComponent{
      * @returns Promise<void>
      */
     async fillTaskName (taskName: string): Promise<void> {
-        await this.wdioFactoryUtils.setValue(this.locators.taskNameInput, taskName);
+        await this.wdioFactoryUtils.setValueByKeys(this.locators.taskNameInput, taskName);
     }
 
     /**

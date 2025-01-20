@@ -1,5 +1,5 @@
 
-import { faker } from '@faker-js/faker';
+import casual from 'casual';
 
 class UtilsMethods {
 
@@ -7,16 +7,16 @@ class UtilsMethods {
      * Gets a random string
      * @returns string
      */
-    public getRandomString(): string {
-        return faker.lorem.sentence.toString();
+    public static async getRandomString(): Promise<string> {
+        return await casual.short_description;
     }
 
-    public getArrayOfRandomStrings(numberOfStrings: number): string[] {
+    public static async getArrayOfRandomStrings(numberOfStrings: number): Promise<string[]> {
         let randomStrings: string[] = new Array(numberOfStrings);
         for (let i = 0; i < numberOfStrings; i++) {
-            randomStrings[i] = faker.lorem.sentence.toString();
+            randomStrings[i] = await this.getRandomString();
         }
         return randomStrings;
     }
 
-}export default new UtilsMethods;
+}export default UtilsMethods;
