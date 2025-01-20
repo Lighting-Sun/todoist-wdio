@@ -11,6 +11,11 @@ class UtilsMethods {
         return await casual.short_description;
     }
 
+    /**
+     * Gets an array of random strings
+     * @param numberOfStrings number
+     * @returns string[]
+     */
     public static async getArrayOfRandomStrings(numberOfStrings: number): Promise<string[]> {
         let randomStrings: string[] = new Array(numberOfStrings);
         for (let i = 0; i < numberOfStrings; i++) {
