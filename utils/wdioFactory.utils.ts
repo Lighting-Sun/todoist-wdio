@@ -95,7 +95,7 @@ export default class WdioFactoryUtils {
      */
     public async getTextFromElements(objElements: ObjElement): Promise<string[]> {
         const elements = await this.getElements(objElements);
-        const elementsText: string[] = await Promise.all( elements.map(async (element) => { return await element.getText()}))
+        const elementsText: string[] = await Promise.all( elements.map(async (element) =>  await element.getText()))
         return elementsText;
     }
 

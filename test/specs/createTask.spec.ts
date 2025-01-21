@@ -33,7 +33,8 @@ describe('Login scenarios', () => {
         await loginPage.openPage();
         await loginPage.loginToPage(userEmail, userPassword);
         await todayPage.createMultipleTasksByTaskNameAndDescription(taskNames, taskDescriptions);
-
+        await expect(await todayPage.getTaskNames()).toEqual(taskNames);
+        await expect(await todayPage.getTaskDescriptions()).toEqual(taskDescriptions);
     });
 
 });

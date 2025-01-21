@@ -111,6 +111,22 @@ class TodayPage extends Page{
         }
     }
 
+    /**
+     * Gets the task names
+     * @returns Promise<string[]>
+     */
+    async getTaskNames(): Promise<string[]> {
+        return await this.wDioFactoryUtils.getTextFromElements(this.locators.todayTasksNames);
+    }
+
+    /**
+     * Gets the task descriptions
+     * @returns Promise<string[]>
+     */
+    async getTaskDescriptions(): Promise<string[]> {
+        return await this.wDioFactoryUtils.getTextFromElements(this.locators.todayTasksDescriptions);
+    }
+
 }
 
 export default new TodayPage();
