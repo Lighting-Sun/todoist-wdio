@@ -1,12 +1,16 @@
 import Page from "./page";
 import Sidebar from "../components/sidebar.component";
 import AddTaskPopUp from "../components/addTaskPopUp.component";
-import { faker } from '@faker-js/faker';
+import TaskMoreMenu from "../components/taskMoreMenu.component";
+import DeleteTaskDialog from "../components/deleteTaskDialog.component";
+import UtilsMethods from "../../utils/utilsMethods.utils";
 
 class TodayPage extends Page{
 
     sidebar = new Sidebar();
     addTaskPopUp = new AddTaskPopUp();
+    taskMoreMenu = new TaskMoreMenu();
+    deleteTaskDialog = new DeleteTaskDialog();
 
     locators = {
         todayPage:{
@@ -29,9 +33,13 @@ class TodayPage extends Page{
             selector: "//section[contains(@aria-label,'Today')]//div[@class='task_list_item__content']//div[@class='task_description']",
             description: "Tasks descriptions"
         },
+        todayTaksContainer:{
+            selector: "//section[contains(@aria-label,'Today')]//div[@class='task_list_item__content']",
+            description: "Today tasks container"
+        },
         todayMoreMenuTask: {
             selector: "//section[contains(@aria-label,'Today')]//button[@data-testid='more_menu']",
-            description: "More options button for all taks"
+            description: "More options button for all taks in today section"
         }
 
     }
@@ -88,8 +96,8 @@ class TodayPage extends Page{
         let taskDescriptions: string[] = new Array(numberOfTasks);
 
         for (let index = 0; index < numberOfTasks; index++) {
-            taskNames[index] = faker.lorem.sentence.toString();
-            taskDescriptions[index] = faker.lorem.sentence.toString();
+            taskNames[index] = await UtilsMethods.getRandomString();
+            taskDescriptions[index] = await UtilsMethods.getRandomString();
             await this.createTask(taskNames[index], taskDescriptions[index]);
         }
 
@@ -131,8 +139,37 @@ class TodayPage extends Page{
         return await this.wDioFactoryUtils.getTextFromElements(this.locators.todayTasksDescriptions);
     }
 
-    async deleteTaskByName(taskName: string): Promise<void> {
-        
+    /**
+     * Hover over the first task more menu
+     * @returns Promise<void>
+     */
+    async hoverOverFirstTaskMoreMenu(): Promise<void> {
+        await this.wDioFactoryUtils.hover(this.locators.todayTaksContainer)
+    }
+
+    /**
+     * Clicks on the first task more menu button
+     * @returns Promise<void>
+     */
+    async clickOnFirstTaskMoreMenuButton(): Promise<void> {
+        await this.wDioFactoryUtils.click(this.locators.todayMoreMenuTask);
+    }
+
+    /**
+     * Deletes all tasks
+     * @returns Promise<void>
+     */
+    async deleteAllTasks(): Promise<void> {
+
+        let isHoverable = await this.wDioFactoryUtils.isHoverable(this.locators.todayTaksContainer);
+
+        while(isHoverable){
+            await this.hoverOverFirstTaskMoreMenu();
+            await this.clickOnFirstTaskMoreMenuButton();
+            await this.taskMoreMenu.clickDeleteTaskButton();
+            await this.deleteTaskDialog.clickDeleteTaskButton();
+            isHoverable = await this.wDioFactoryUtils.isHoverable(this.locators.todayTaksContainer);
+        }
     }
 
 }

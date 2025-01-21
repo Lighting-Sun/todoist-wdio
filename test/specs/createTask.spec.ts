@@ -35,6 +35,8 @@ describe('Login scenarios', () => {
         await todayPage.createMultipleTasksByTaskNameAndDescription(taskNames, taskDescriptions);
         await expect(await todayPage.getTaskNames()).toEqual(taskNames);
         await expect(await todayPage.getTaskDescriptions()).toEqual(taskDescriptions);
+
+        await todayPage.deleteAllTasks();
     });
 
 });
