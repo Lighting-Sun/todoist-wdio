@@ -29,6 +29,10 @@ class TodayPage extends Page{
             selector: "//section[contains(@aria-label,'Today')]//div[@class='task_list_item__content']//div[@class='task_description']",
             description: "Tasks descriptions"
         },
+        todayMoreMenuTask: {
+            selector: "//section[contains(@aria-label,'Today')]//button[@data-testid='more_menu']",
+            description: "More options button for all taks"
+        }
 
     }
 
@@ -125,6 +129,10 @@ class TodayPage extends Page{
      */
     async getTaskDescriptions(): Promise<string[]> {
         return await this.wDioFactoryUtils.getTextFromElements(this.locators.todayTasksDescriptions);
+    }
+
+    async deleteTaskByName(taskName: string): Promise<void> {
+        
     }
 
 }
