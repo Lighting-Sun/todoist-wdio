@@ -6,7 +6,7 @@ import casual from "casual";
 const userEmail = process.env.USEREMAIL!;
 const userPassword = process.env.USERPASSWORD!;
 
-describe('Login scenarios', () => {
+describe('Task creation scenarios', () => {
 
 
     it('Create a single task', async () => {
@@ -26,7 +26,7 @@ describe('Login scenarios', () => {
         await expect(await todayPage.getTaskDescriptionByName(taskName)).toEqual(taskDescription);
     });
 
-    it.only('Create a 10 tasks', async () => {
+    it('Create a 10 tasks', async () => {
         const taskNames = await UtilsMethods.getArrayOfRandomStrings(10);
         const taskDescriptions = await UtilsMethods.getArrayOfRandomStrings(10);
 
@@ -35,7 +35,9 @@ describe('Login scenarios', () => {
         await todayPage.createMultipleTasksByTaskNameAndDescription(taskNames, taskDescriptions);
         await expect(await todayPage.getTaskNames()).toEqual(taskNames);
         await expect(await todayPage.getTaskDescriptions()).toEqual(taskDescriptions);
+    });
 
+    afterEach(async () => {
         await todayPage.deleteAllTasks();
     });
 
