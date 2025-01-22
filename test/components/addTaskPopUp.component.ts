@@ -14,6 +14,10 @@ class AddTaskPopUp extends BaseComponent{
         addTaskButton:{
             selector: "button[data-testid='task-editor-submit-button']",
             description: "Add task button"
+        },
+        quickAddDialog:{
+            selector: ".quick_add",
+            description: "Quick add dialog"
         }
     }
 

@@ -17,6 +17,8 @@ export default class WdioFactoryUtils {
         const elementSelector = $(objElement.selector);
         const elementDescription = objElement.description;
         await elementSelector.waitForClickable({timeoutMsg: `Element ${elementDescription} is not clickable before timeout`});
+        await elementSelector.moveTo();
+        await this.waitForStable(objElement);
         await elementSelector.click();
     }
 
@@ -137,8 +139,14 @@ export default class WdioFactoryUtils {
     public async isHoverable(objElement: ObjElement): Promise<boolean> {
         const elementSelector = $(objElement.selector);
         const elementDescription = objElement.description;
-        const elementDisplayed = await elementSelector.waitForDisplayed({timeout: 7000,timeoutMsg: `Element ${elementDescription} is not found before timeout`}).catch(() => false);
+        const elementDisplayed = await elementSelector.waitForDisplayed({timeout: 5000,timeoutMsg: `Element ${elementDescription} is not found before timeout`}).catch(() => false);
         return elementDisplayed;
+    }
+
+    public async waitForStable(objElement: ObjElement): Promise<void> {
+        const elementSelector = $(objElement.selector);
+        const elementDescription = objElement.description;
+        await elementSelector.waitForStable({timeout: 7000,timeoutMsg: `Element ${elementDescription} is not stable (no animated) before timeout`}).catch(() => false);
     }
 
 }

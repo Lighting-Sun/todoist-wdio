@@ -77,6 +77,7 @@ class TodayPage extends Page{
      */
     async createTask(taskName: string, taskDescription: string): Promise<void> {
         await this.sidebar.clickAddTaskButton();
+        await this.wDioFactoryUtils.waitForStable(this.addTaskPopUp.locators.quickAddDialog);
         await this.addTaskPopUp.fillTaskName(taskName);
         await this.addTaskPopUp.fillTaskDescription(taskDescription);
         await this.addTaskPopUp.clickAddTaskButton();
