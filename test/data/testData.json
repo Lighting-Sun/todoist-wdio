@@ -1,0 +1,17 @@
+{
+    "users":{
+        "invalidUser": {
+            "email": "cortesjarveyw@gmail.com",
+            "password": "Cortes11"
+        },
+        "emptyUser": {
+            "email": "",
+            "password": ""
+        }
+    },
+    "loginErrors":{
+        "invalidAddress": "Please enter a valid email address.",
+        "passwordLength": "Passwords must be at least 8 characters long.",
+        "wrongEmailOrPassword": "Wrong email or password."
+    }
+}

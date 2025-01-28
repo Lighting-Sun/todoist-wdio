@@ -14,6 +14,10 @@ class AddTaskPopUp extends BaseComponent{
         addTaskButton:{
             selector: "button[data-testid='task-editor-submit-button']",
             description: "Add task button"
+        },
+        quickAddDialog:{
+            selector: ".quick_add",
+            description: "Quick add dialog"
         }
     }
 
@@ -23,7 +27,7 @@ class AddTaskPopUp extends BaseComponent{
      * @returns Promise<void>
      */
     async fillTaskName (taskName: string): Promise<void> {
-        await this.wdioFactoryUtils.setValue(this.locators.taskNameInput, taskName);
+        await this.wdioFactoryUtils.setValueByKeys(this.locators.taskNameInput, taskName);
     }
 
     /**
@@ -32,7 +36,7 @@ class AddTaskPopUp extends BaseComponent{
      * @returns Promise<void>
      */
     async fillTaskDescription (taskDescription: string): Promise<void> {
-        await this.wdioFactoryUtils.setValue(this.locators.taskDescriptionInput, taskDescription);
+        await this.wdioFactoryUtils.setValueByKeys(this.locators.taskDescriptionInput, taskDescription);
     }
 
     /**

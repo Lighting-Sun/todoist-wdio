@@ -17,6 +17,8 @@ export default class WdioFactoryUtils {
         const elementSelector = $(objElement.selector);
         const elementDescription = objElement.description;
         await elementSelector.waitForClickable({timeoutMsg: `Element ${elementDescription} is not clickable before timeout`});
+        await elementSelector.moveTo();
+        await this.waitForStable(objElement);
         await elementSelector.click();
     }
 
@@ -50,6 +52,23 @@ export default class WdioFactoryUtils {
         await elementSelector.setValue(srtValueToSend);
     }
 
+    /**
+     * sets the value of an element by using the sendKeys method from wdio
+     * @param objElement an object containing the selector and description of the element
+     * @param srtValueToSend the value to set
+     */
+        public async setValueByKeys(objElement: ObjElement, srtValueToSend: string): Promise<void> {
+            const elementSelector = $(objElement.selector);
+            const elementDescription = objElement.description;
+            await elementSelector.waitForDisplayed({timeoutMsg: `Element ${elementDescription} is not found before timeout`});
+            await elementSelector.waitForEnabled({timeoutMsg: `Element ${elementDescription} is not enabled before timeout`});
+            await elementSelector.waitForClickable({timeoutMsg: `Element ${elementDescription} is not clickable before timeout`});
+            await this.click(objElement)
+            for (const characters of srtValueToSend) {
+                await browser.keys(characters);
+            }
+        }
+
 
     /**
      * Returns the text of an element
@@ -80,7 +99,7 @@ export default class WdioFactoryUtils {
      */
     public async getTextFromElements(objElements: ObjElement): Promise<string[]> {
         const elements = await this.getElements(objElements);
-        const elementsText: string[] = await Promise.all( elements.map(async (element) => { return await element.getText()}))
+        const elementsText: string[] = await Promise.all(await elements.map(async (element) =>  await element.getText()))
         return elementsText;
     }
 
@@ -98,6 +117,36 @@ export default class WdioFactoryUtils {
             element = await $(objElement.selector);
             isClickable = await element.waitForClickable({timeout: 1000}).catch(() => false);
         }
+    }
+
+    /**
+     * Hover over an element
+     * @param objElement an object containing the selector and description of the element
+     * @returns Promise<void>
+     */
+    public async hover(objElement: ObjElement): Promise<void> {
+        const elementSelector = $(objElement.selector);
+        const elementDescription = objElement.description;
+        await elementSelector.waitForDisplayed({timeoutMsg: `Element ${elementDescription} is not found before timeout`});
+        await elementSelector.moveTo();
+    }
+
+     /**
+     * Hover over an element
+     * @param objElement an object containing the selector and description of the element
+     * @returns Promise<void>
+     */
+    public async isHoverable(objElement: ObjElement): Promise<boolean> {
+        const elementSelector = $(objElement.selector);
+        const elementDescription = objElement.description;
+        const elementDisplayed = await elementSelector.waitForDisplayed({timeout: 5000,timeoutMsg: `Element ${elementDescription} is not found before timeout`}).catch(() => false);
+        return elementDisplayed;
+    }
+
+    public async waitForStable(objElement: ObjElement): Promise<void> {
+        const elementSelector = $(objElement.selector);
+        const elementDescription = objElement.description;
+        await elementSelector.waitForStable({timeout: 7000,timeoutMsg: `Element ${elementDescription} is not stable (no animated) before timeout`}).catch(() => false);
     }
 
 }
