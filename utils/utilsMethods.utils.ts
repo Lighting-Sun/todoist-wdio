@@ -17,7 +17,7 @@ class UtilsMethods {
      * @returns string[]
      */
     public static async getArrayOfRandomStrings(numberOfStrings: number): Promise<string[]> {
-        let randomStrings: string[] = new Array(numberOfStrings);
+        const randomStrings: string[] = new Array(numberOfStrings);
         for (let i = 0; i < numberOfStrings; i++) {
             randomStrings[i] = await this.getRandomString();
         }

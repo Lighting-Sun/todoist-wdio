@@ -87,7 +87,7 @@ export default class WdioFactoryUtils {
      * @param objElements an object containing the selector and description elements
      * @returns an array of selectors
     */
-    public async getElements(objElements: ObjElement): Promise<any[]> {
+    public async getElements(objElements: ObjElement): Promise<ChainablePromiseArray[]> {
         const elementsSelector: ChainablePromiseArray = $$(objElements.selector);
         return elementsSelector;
     }
