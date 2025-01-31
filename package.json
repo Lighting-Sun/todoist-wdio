@@ -15,7 +15,10 @@
     "wdio-video-reporter": "^6.1.1"
   },
   "scripts": {
-    "wdio": "wdio run ./wdio.conf.ts"
+    "test": "npx wdio",
+    "wdio": "wdio run ./wdio.conf.ts",
+    "generate-allure-report": "allure generate --clean ./reports/allure/allure-results -o ./reports/allure/allure-report && allure open ./reports/allure/allure-report",
+    "open-allure": "allure open ./reports/allure/allure-report"
   },
   "dependencies": {
     "allure-commandline": "^2.32.0",
