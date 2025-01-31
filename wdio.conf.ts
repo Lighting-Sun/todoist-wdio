@@ -1,7 +1,26 @@
 import allure from 'allure-commandline';
 import fs from 'fs';
+import yargs from 'yargs';
+import { hideBin } from 'yargs/helpers';
+
+const argv = yargs(hideBin(process.argv))
+    .option('browser', {
+    type: 'string',
+    description: 'Specify browser to run tests in'
+}).parseSync();
 
 const allureDir = './reports/allure';
+
+type BrowserType = 'chrome' | 'safari';
+const runInBrowser = argv.browser as BrowserType | undefined;
+const browserCap: Record<BrowserType, { browserName: string }> = {
+    chrome: { browserName: 'chrome' },
+    safari: { browserName: 'safari' }
+};
+// Select a browser
+const selectedBrowserCap = browserCap[runInBrowser ?? 'chrome'];
+
+console.log(selectedBrowserCap);
 
 export const config: WebdriverIO.Config = {
 
@@ -57,11 +76,7 @@ export const config: WebdriverIO.Config = {
     // Sauce Labs platform configurator - a great tool to configure your capabilities:
     // https://saucelabs.com/platform/platform-configurator
     //
-    capabilities: [{
-        browserName: 'chrome'
-    }, {
-        browserName: 'safari'
-    }],
+    capabilities: [selectedBrowserCap],
 
     //
     // ===================
