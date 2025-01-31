@@ -1,4 +1,10 @@
+import allure from 'allure-commandline';
+import fs from 'fs';
+
+const allureDir = './reports/allure';
+
 export const config: WebdriverIO.Config = {
+
     //
     // ====================
     // Runner Configuration
@@ -6,7 +12,7 @@ export const config: WebdriverIO.Config = {
     // WebdriverIO supports running e2e tests as well as unit and component tests.
     runner: 'local',
     tsConfigPath: './tsconfig.json',
-    
+
     //
     // ==================
     // Specify Test Files
@@ -45,7 +51,7 @@ export const config: WebdriverIO.Config = {
     // and 30 processes will get spawned. The property handles how many capabilities
     // from the same test should run tests.
     //
-    maxInstances: 10,
+    maxInstances: 1,
     //
     // If you have trouble getting all important capabilities together, check out the
     // Sauce Labs platform configurator - a great tool to configure your capabilities:
@@ -113,7 +119,7 @@ export const config: WebdriverIO.Config = {
     // Make sure you have the wdio adapter package for the specific framework installed
     // before running any tests.
     framework: 'mocha',
-    
+
     //
     // The number of times to retry the entire specfile when it fails as a whole
     // specFileRetries: 1,
@@ -127,7 +133,9 @@ export const config: WebdriverIO.Config = {
     // Test reporter for stdout.
     // The only one supported by default is 'dot'
     // see also: https://webdriver.io/docs/dot-reporter
-    reporters: ['spec',['allure', {outputDir: 'allure-results'}],'video'],
+    reporters: ['spec', ['allure',{
+        outputDir: allureDir + '/allure-results',
+        },]],
 
     // Options to be passed to Mocha.
     // See the full list at http://mochajs.org/
@@ -149,8 +157,23 @@ export const config: WebdriverIO.Config = {
      * @param {object} config wdio configuration object
      * @param {Array.<Object>} capabilities list of capabilities details
      */
-    // onPrepare: function (config, capabilities) {
-    // },
+     onPrepare: function () {
+
+        const dir = allureDir;
+
+        try {
+            if (fs.existsSync(dir)) {
+                fs.rmSync(dir,{ recursive: true});
+                console.log(`🗑️ ${dir} is deleted` );
+            }
+        } catch (err) {
+            console.error("⚠ error while deleting the directory", err);
+            if (!fs.existsSync(dir)) {
+                fs.mkdirSync(dir,{recursive: true});
+                console.log(`📁 ${dir} is created`);
+            }
+        }
+     },
     /**
      * Gets executed before a worker process is spawned and can be used to initialize specific service
      * for that worker as well as modify runtime environments in an async fashion.
@@ -230,7 +253,7 @@ export const config: WebdriverIO.Config = {
      * @param {boolean} result.passed    true if test has passed, otherwise false
      * @param {object}  result.retries   information about spec related retries, e.g. `{ attempts: 0, limit: 0 }`
      */
-    afterTest: async function(test,{ passed }) {
+    afterTest: async function (test, { passed }) {
         if (!passed) {
             await browser.takeScreenshot();
         }
@@ -277,8 +300,29 @@ export const config: WebdriverIO.Config = {
      * @param {Array.<Object>} capabilities list of capabilities details
      * @param {<Object>} results object containing test results
      */
-    // onComplete: function(exitCode, config, capabilities, results) {
-    // },
+
+        // ...
+    onComplete: function() {
+        const reportError = new Error('Could not generate Allure report')
+        const generation = allure(['generate', allureDir + '/allure-results', '--clean', '-o', allureDir + '/allure-report'])
+        return new Promise<void>((resolve, reject) => {
+            const generationTimeout = setTimeout(
+                () => reject(reportError),
+                90_000);
+
+            generation.on('exit', function(exitCode: number) {
+                clearTimeout(generationTimeout);
+
+                if (exitCode !== 0) {
+                    return reject(reportError);
+                }
+
+                console.log('Allure report successfully generated')
+                resolve();
+            })
+        })
+    }
+
     /**
     * Gets executed when a refresh happens.
     * @param {string} oldSessionId session ID of the old session
