@@ -93,8 +93,8 @@ class TodayPage extends Page{
         if  (numberOfTasks < 1) {
             throw new Error('numberOfTasks must be greater than 0');
         }
-        let taskNames: string[] = new Array(numberOfTasks);
-        let taskDescriptions: string[] = new Array(numberOfTasks);
+        const taskNames: string[] = new Array(numberOfTasks);
+        const taskDescriptions: string[] = new Array(numberOfTasks);
 
         for (let index = 0; index < numberOfTasks; index++) {
             taskNames[index] = await UtilsMethods.getRandomString();
