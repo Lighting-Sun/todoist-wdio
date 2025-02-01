@@ -1,8 +1,35 @@
 name: CI
 
 on:
-    pull_request:
-        branches: ['main']
+  push:
+    branches: ["main", "continous-integration"]
+  pull_request:
+    branches: ["main"]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-    runEslint:
-        runs-on: ubuntu-latest
+  runTest:
+    env:
+        USEREMAIL: ${{ secrets.USEREMAIL }}
+        USERPASSWORD: ${{ secrets.USERPASSWORD }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: secrets
+        run: echo "secret exist ${{ env.USEREMAIL }} with password ${{ env.USERPASSWORD }}"
+      - name: Checkout
+        uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20.17.0"
+          cache: "npm"
+      - name: Install
+        run: npm ci --no-fund --no-audit
+      - name: Test
+        run: npx wdio wdio.conf.ts
+      - uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: ./reports/allure/allure-report

@@ -11,16 +11,21 @@ const argv = yargs(hideBin(process.argv))
 
 const allureDir = './reports/allure';
 
-type BrowserType = 'chrome' | 'safari';
-const runInBrowser = argv.browser as BrowserType | undefined;
-const browserCap: Record<BrowserType, { browserName: string }> = {
-    chrome: { browserName: 'chrome' },
-    safari: { browserName: 'safari' }
-};
-// Select a browser
-const selectedBrowserCap = browserCap[runInBrowser ?? 'chrome'];
 
-console.log(selectedBrowserCap);
+const browserName = argv.browser || 'chrome';
+const browserCapabilities: WebdriverIO.Capabilities = {
+    browserName,
+}
+if (browserName === 'chrome') {
+    browserCapabilities['goog:chromeOptions'] = {
+        args: ['--headless'],
+    };
+}
+if (browserName === 'safari') {
+    browserCapabilities['wdio:safaridriverOptions'] = {
+        technologyPreview: true, // Use Safari Technology Preview if needed
+    };
+}
 
 export const config: WebdriverIO.Config = {
 
@@ -50,6 +55,12 @@ export const config: WebdriverIO.Config = {
     specs: [
         './test/specs/**/*.ts'
     ],
+    suites:{
+        regression: [
+            './test/specs/createTask.spec.ts',
+            './test/specs/login.spec.ts'
+        ]
+    },
     // Patterns to exclude.
     exclude: [
         // 'path/to/excluded/files'
@@ -76,7 +87,7 @@ export const config: WebdriverIO.Config = {
     // Sauce Labs platform configurator - a great tool to configure your capabilities:
     // https://saucelabs.com/platform/platform-configurator
     //
-    capabilities: [selectedBrowserCap],
+    capabilities: [browserCapabilities],
 
     //
     // ===================
@@ -226,8 +237,9 @@ export const config: WebdriverIO.Config = {
      * @param {Array.<String>} specs        List of spec file paths that are to be run
      * @param {object}         browser      instance of created browser/device session
      */
-    // before: function (capabilities, specs) {
-    // },
+    before: function () {
+        browser.maximizeWindow();
+    },
     /**
      * Runs before a WebdriverIO command gets executed.
      * @param {string} commandName hook command name
