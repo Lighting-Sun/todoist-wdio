@@ -55,6 +55,12 @@ export const config: WebdriverIO.Config = {
     specs: [
         './test/specs/**/*.ts'
     ],
+    suites:{
+        regression: [
+            './test/specs/createTask.spec.ts',
+            './test/specs/login.spec.ts'
+        ]
+    },
     // Patterns to exclude.
     exclude: [
         // 'path/to/excluded/files'

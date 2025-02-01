@@ -8,7 +8,7 @@ const userPassword = process.env.USERPASSWORD!;
 describe('Login scenarios', () => {
     const data = JSON.parse(readFileSync('./test/data/testData.json', 'utf8'));
 
-    it('Should successsful login into todoist app', async () => {
+    it('Should successsful login into todoist app @smoke', async () => {
         await loginPage.openPage();
         await loginPage.fillEmail(userEmail);
         await loginPage.fillPassword(userPassword);
@@ -16,7 +16,7 @@ describe('Login scenarios', () => {
         await expect(await todayPage.getTodayPageTitleText()).toEqual('Today');
     });
 
-    it('Should fail login into todoist app when email is missing', async () => {
+    it('Should fail login into todoist app when email is missing @smoke', async () => {
         await loginPage.openPage();
         await loginPage.fillEmail(data.users.emptyUser.email);
         await loginPage.fillPassword(userPassword);
