@@ -12,6 +12,9 @@ concurrency:
 
 jobs:
   runTest:
+    env:
+        USERNAME: ${{secrets.USEREMAIL}},
+        USERPASSWORD: ${{secrets.USERPASSWORD}}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
