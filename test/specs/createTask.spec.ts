@@ -9,7 +9,7 @@ const userPassword = process.env.USERPASSWORD!;
 describe('Task creation scenarios', () => {
 
 
-    it('Create a single task', async () => {
+    it('Create a single task @smoke', async () => {
         const taskName = casual.title;
         const taskDescription = casual.short_description;
 
