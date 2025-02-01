@@ -5,8 +5,6 @@ import casual from "casual";
 
 const userEmail = process.env.USEREMAIL!;
 const userPassword = process.env.USERPASSWORD!;
-console.log(userEmail);
-console.log(userPassword);
 
 describe('Task creation scenarios', () => {
 
