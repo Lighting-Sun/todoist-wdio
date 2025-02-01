@@ -21,9 +21,9 @@ if (browserName === 'chrome') {
         args: ['--headless'],
     };
 }
-if (browserName === 'firefix') {
+if (browserName === 'firefox') {
     browserCapabilities['moz:firefoxOptions'] = {
-        args: [], // Use Safari Technology Preview if needed
+        args: ['--headless'],
     };
 }
 
