@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: secrets
-        run: echo "secret exist ${{ env.USERNAME }} with password ${{ env.USERPASSWORD }}"
+        run: echo "secret exist ${{ env.USEREMAIL }} with password ${{ env.USERPASSWORD }}"
       - name: Checkout
         uses: actions/checkout@v4
       - uses: actions/setup-node@v4
