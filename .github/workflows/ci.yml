@@ -34,6 +34,10 @@ jobs:
       - name: Run Tests and Capture Output
         run: |
           npx wdio wdio.conf.ts | tee wdio-test-results.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: ./reports/allure/allure-report
 
       - name: Extract Test Summary
         run: |
@@ -59,4 +63,3 @@ jobs:
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-
