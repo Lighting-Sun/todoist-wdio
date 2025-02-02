@@ -39,17 +39,52 @@ jobs:
           name: allure-report
           path: ./reports/allure/allure-report
       - name: Extract Test Summary
-        run: >
-          PASSED=$(grep -oP '\d+ passing' wdio-test-results.txt | awk '{print $1}')
-          echo "PASSED=$PASSED" >> $GITHUB_ENV
+        id: parse-test-results
+        run: |
+          # Extract passed and failed test cases from the log file
+          PASSED_TESTS=$(grep -E '✓' test-results.log | sed 's/^.*✓ //' | paste -sd ', ' -)
+          FAILED_TESTS=$(grep -E '✗' test-results.log | sed 's/^.*✗ //' | paste -sd ', ' -)
+      
+          # Count the number of passed and failed tests
+          PASSED_COUNT=$(grep -c '✓' test-results.log || echo 0)
+          FAILED_COUNT=$(grep -c '✗' test-results.log || echo 0)
+      
+          # Format the message
+          MESSAGE="Test Results:\n"
+          MESSAGE+="Passed Tests (${PASSED_COUNT}): ${PASSED_TESTS:-None}\n"
+          MESSAGE+="Failed Tests (${FAILED_COUNT}): ${FAILED_TESTS:-None}"
+      
+          # Escape newlines for JSON compatibility
+          MESSAGE=$(echo "$MESSAGE" | jq -R -s -c .)
+      
+          # Set outputs for reuse in subsequent steps
+          echo "passed_tests=${PASSED_TESTS}" >> $GITHUB_OUTPUT
+          echo "failed_tests=${FAILED_TESTS}" >> $GITHUB_OUTPUT
+          echo "passed_count=${PASSED_COUNT}" >> $GITHUB_OUTPUT
+          echo "failed_count=${FAILED_COUNT}" >> $GITHUB_OUTPUT
+          echo "message=${MESSAGE}" >> $GITHUB_OUTPUT
       - name: Send Slack Notification
         uses: slackapi/slack-github-action@v2.0.0
         with:
           payload: |
             {
-              "text": "WebdriverIO Test Results:\n*✅ Passed:* before variable ${{ env.PASSED }} after variable  \n*",
-              "username": "GitHub Actions Bot",
-              "icon_emoji": ":robot_face:"
+              "text": "*GitHub Actions Workflow Results*",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": *Workflow:* ${{ github.workflow }}\n*Status:* ${{ job.status }}"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "Test Results:\nPassed Tests (${{ steps.parse-test-results.outputs.passed_count }}): ${{ steps.parse-test-results.outputs.passed_tests }}\nFailed Tests (${{ steps.parse-test-results.outputs.failed_count }}): ${{ steps.parse-test-results.outputs.failed_tests }}"
+                  }
+                }
+              ]
             }
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           webhook-type: webhook-trigger
