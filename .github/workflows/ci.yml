@@ -39,7 +39,7 @@ jobs:
           name: allure-report
           path: ./reports/allure/allure-report
       - name: Extract Test Summary
-        run: |
+        run: >
           PASSED=$(grep -oP '\d+ passing' wdio-test-results.txt | awk '{print $1}')
           echo "PASSED=$PASSED" >> $GITHUB_ENV
       - name: Send Slack Notification
