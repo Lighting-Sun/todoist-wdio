@@ -33,7 +33,7 @@ jobs:
 
       - name: Run Tests and Capture Output
         run: |
-          npx wdio wdio.conf.ts | tee wdio-test-results.txt
+          npx wdio wdio.conf.ts > test-results.log 2>&1
       - uses: actions/upload-artifact@v4
         with:
           name: allure-report
