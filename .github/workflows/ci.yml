@@ -19,17 +19,44 @@ jobs:
     steps:
       - name: secrets
         run: echo "secret exist ${{ env.USEREMAIL }} with password ${{ env.USERPASSWORD }}"
+
       - name: Checkout
         uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: "20.17.0"
           cache: "npm"
-      - name: Install
+
+      - name: Install Dependencies
         run: npm ci --no-fund --no-audit
-      - name: Test
-        run: npx wdio wdio.conf.ts
-      - uses: actions/upload-artifact@v4
+
+      - name: Run Tests and Capture Output
+        run: |
+          npx wdio wdio.conf.ts | tee wdio-test-results.txt
+
+      - name: Extract Test Summary
+        run: |
+          PASSED=$(grep -oP '\d+ passing' wdio-test-results.txt | awk '{print $1}')
+          FAILED=$(grep -oP '\d+ failing' wdio-test-results.txt | awk '{print $1}')
+
+          TEST_DETAILS=$(grep -E "(\.spec\.ts|✓|✗)" wdio-test-results.txt)
+
+          echo "PASSED=$PASSED" >> $GITHUB_ENV
+          echo "FAILED=$FAILED" >> $GITHUB_ENV
+          echo "TEST_DETAILS<<EOF" >> $GITHUB_ENV
+          echo "$TEST_DETAILS" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Send Slack Notification
+        uses: slackapi/slack-github-action@v2.0.0
         with:
-          name: allure-report
-          path: ./reports/allure/allure-report
+          payload: |
+            {
+              "text": "WebdriverIO Test Results:\n*✅ Passed:* ${{ env.PASSED }}\n*❌ Failed:* ${{ env.FAILED }}\n*Details:*\n``` ${{ env.TEST_DETAILS }}```",
+              "username": "GitHub Actions Bot",
+              "icon_emoji": ":robot_face:"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
