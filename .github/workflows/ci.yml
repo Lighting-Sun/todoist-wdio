@@ -35,12 +35,12 @@ jobs:
         id: parse-test-results
         run: |
           # Extract passed and failed test cases from the log file
-          PASSED_TESTS=$(grep -E '✓' test-results.log | sed 's/^.*✓ //' | paste -sd ', ' -)
-          FAILED_TESTS=$(grep -E '✗' test-results.log | sed 's/^.*✗ //' | paste -sd ', ' -)
+          PASSED_TESTS=$(grep -E '✓' test-results.txt | sed 's/^.*✓ //' | paste -sd ', ' -)
+          FAILED_TESTS=$(grep -E '✗' test-results.txt | sed 's/^.*✗ //' | paste -sd ', ' -)
       
           # Count the number of passed and failed tests
-          PASSED_COUNT=$(grep -c '✓' test-results.log || echo 0)
-          FAILED_COUNT=$(grep -c '✗' test-results.log || echo 0)
+          PASSED_COUNT=$(grep -c '✓' test-results.txt || echo 0)
+          FAILED_COUNT=$(grep -c '✗' test-results.txt || echo 0)
       
           # Format the message
           MESSAGE="Test Results:\n"
