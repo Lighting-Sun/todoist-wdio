@@ -39,7 +39,6 @@ jobs:
         with:
           name: allure-report
           path: ./reports/allure/allure-report
-
       - name: Extract Test Summary
         run: |
           PASSED=$(grep -oP '\d+ passing' wdio-test-results.txt | awk '{print $1}')
@@ -49,9 +48,9 @@ jobs:
 
           echo "PASSED=$PASSED" >> $GITHUB_ENV
           echo "FAILED=$FAILED" >> $GITHUB_ENV
-          echo "TEST_DETAILS<<EOF" >> $GITHUB_ENV
-          echo "$TEST_DETAILS" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
+
+          # Properly format TEST_DETAILS for GitHub Actions
+          printf "TEST_DETAILS<<EOF\n%s\nEOF\n" "$TEST_DETAILS" >> $GITHUB_ENV
 
       - name: Send Slack Notification
         uses: slackapi/slack-github-action@v2.0.0
