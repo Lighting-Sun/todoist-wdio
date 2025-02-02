@@ -23,7 +23,7 @@ if (browserName === 'chrome') {
 }
 if (browserName === 'firefox') {
     browserCapabilities['moz:firefoxOptions'] = {
-        args: ['--headless'],
+        args: ['-headless'],
     };
 }
 
