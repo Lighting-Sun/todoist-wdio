@@ -24,9 +24,15 @@ jobs:
           cache: "npm"
       - name: Install Dependencies
         run: npm ci --no-fund --no-audit
+      - name: List Files Before Tests
+        run: ls -la
       - name: Run Tests and Capture Output
         run: |
           npx wdio wdio.conf.ts | tee wdio-test-results.txt
+      - name: List Files After Tests
+        run: ls -la
+      - name: Debug Test Results File
+        run: cat wdio-test-results.txt || echo "File does not exist."
       - uses: actions/upload-artifact@v4
         with:
           name: allure-report
