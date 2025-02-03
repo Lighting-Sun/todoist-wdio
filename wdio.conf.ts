@@ -1,3 +1,4 @@
+import SlackReporter from '@moroo/wdio-slack-reporter';
 import allure from 'allure-commandline';
 import fs from 'fs';
 import yargs from 'yargs';
@@ -159,9 +160,18 @@ export const config: WebdriverIO.Config = {
     // Test reporter for stdout.
     // The only one supported by default is 'dot'
     // see also: https://webdriver.io/docs/dot-reporter
-    reporters: ['spec', ['allure',{
-        outputDir: allureDir + '/allure-results',
-        },]],
+    reporters: [
+        'spec',
+        ['allure', {
+            outputDir: allureDir + '/allure-results',
+        }],
+        [SlackReporter, {
+            slackOptions: {
+                type: 'webhook',
+                webhook: process.env.SLACK_WEBHOOK_URL!,
+            },
+        }],
+    ],
 
     // Options to be passed to Mocha.
     // See the full list at http://mochajs.org/

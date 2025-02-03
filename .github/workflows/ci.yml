@@ -12,6 +12,7 @@ jobs:
     env:
         USEREMAIL: ${{ secrets.USEREMAIL }}
         USERPASSWORD: ${{ secrets.USERPASSWORD }}
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
     runs-on: ubuntu-latest
     steps:
       - name: secrets
@@ -24,66 +25,10 @@ jobs:
           cache: "npm"
       - name: Install Dependencies
         run: npm ci --no-fund --no-audit
-      - name: List Files Before Tests
-        run: ls -la
       - name: Run Tests and Capture Output
         run: |
-          npx wdio wdio.conf.ts | tee wdio-test-results.txt
-      - name: List Files After Tests
-        run: ls -la
-      - name: Debug Test Results File
-        run: cat wdio-test-results.txt || echo "File does not exist."
+          npx wdio wdio.conf.ts
       - uses: actions/upload-artifact@v4
         with:
           name: allure-report
           path: ./reports/allure/allure-report
-      - name: Extract Test Summary
-        id: parse-test-results
-        run: |
-          # Extract passed and failed test cases from the log file
-          PASSED_TESTS=$(grep -E '✓' test-results.txt | sed 's/^.*✓ //' | paste -sd ', ' -)
-          FAILED_TESTS=$(grep -E '✗' test-results.txt | sed 's/^.*✗ //' | paste -sd ', ' -)
-      
-          # Count the number of passed and failed tests
-          PASSED_COUNT=$(grep -c '✓' test-results.txt || echo 0)
-          FAILED_COUNT=$(grep -c '✗' test-results.txt || echo 0)
-      
-          # Format the message
-          MESSAGE="Test Results:\n"
-          MESSAGE+="Passed Tests (${PASSED_COUNT}): ${PASSED_TESTS:-None}\n"
-          MESSAGE+="Failed Tests (${FAILED_COUNT}): ${FAILED_TESTS:-None}"
-      
-          # Escape newlines for JSON compatibility
-          MESSAGE=$(echo "$MESSAGE" | jq -R -s -c .)
-      
-          # Set outputs for reuse in subsequent steps
-          echo "passed_tests=${PASSED_TESTS}" >> $GITHUB_OUTPUT
-          echo "failed_tests=${FAILED_TESTS}" >> $GITHUB_OUTPUT
-          echo "passed_count=${PASSED_COUNT}" >> $GITHUB_OUTPUT
-          echo "failed_count=${FAILED_COUNT}" >> $GITHUB_OUTPUT
-          echo "message=${MESSAGE}" >> $GITHUB_OUTPUT
-      - name: Send Slack Notification
-        uses: slackapi/slack-github-action@v2.0.0
-        with:
-          payload: |
-            {
-              "text": "*GitHub Actions Workflow Results*",
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "\\*Workflow:\\* ${{ github.workflow }}\n\\*Status:\\* ${{ job.status }}"
-                  }
-                },
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "Test Results:\nPassed Tests (${{ steps.parse-test-results.outputs.passed_count }}): ${{ steps.parse-test-results.outputs.passed_tests }}\nFailed Tests (${{ steps.parse-test-results.outputs.failed_count }}): ${{ steps.parse-test-results.outputs.failed_tests }}"
-                  }
-                }
-              ]
-            }
-          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
-          webhook-type: webhook-trigger
