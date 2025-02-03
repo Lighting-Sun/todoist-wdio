@@ -29,6 +29,10 @@ concurrency:
 
 jobs:
   runTest:
+    env:
+        USEREMAIL: ${{ secrets.USEREMAIL }}
+        USERPASSWORD: ${{ secrets.USERPASSWORD }}
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
