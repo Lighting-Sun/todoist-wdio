@@ -1,20 +1,18 @@
 name: CI
-
 on:
   push:
     branches: ["main", "continous-integration"]
   pull_request:
     branches: ["main"]
-
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
-
 jobs:
   runTest:
     env:
         USEREMAIL: ${{ secrets.USEREMAIL }}
         USERPASSWORD: ${{ secrets.USERPASSWORD }}
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
     runs-on: ubuntu-latest
     steps:
       - name: secrets
@@ -25,10 +23,11 @@ jobs:
         with:
           node-version: "20.17.0"
           cache: "npm"
-      - name: Install
+      - name: Install Dependencies
         run: npm ci --no-fund --no-audit
-      - name: Test
-        run: npx wdio wdio.conf.ts
+      - name: Run Tests
+        run: |
+          npx wdio wdio.conf.ts
       - uses: actions/upload-artifact@v4
         with:
           name: allure-report
