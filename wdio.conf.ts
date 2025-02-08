@@ -14,18 +14,38 @@ const allureDir = './reports/allure';
 
 
 const browserName = argv.browser || 'chrome';
-const browserCapabilities: WebdriverIO.Capabilities = {
-    browserName,
+
+let browserCapabilities: WebdriverIO.Capabilities ;
+
+if (browserName === 'browserStack'){
+    browserCapabilities =
+        {
+            browserName: 'Chrome',
+            'bstack:options': {
+              os: 'Windows',
+              osVersion: '10',
+              browserVersion: '131.0'
+            }
+        }
+}else{
+    browserCapabilities = {
+        browserName,
+    }
+    if (browserName === 'chrome') {
+        browserCapabilities['goog:chromeOptions'] = {
+            args: ['--headless'],
+        };
+    }
+    if (browserName === 'firefox') {
+        browserCapabilities['moz:firefoxOptions'] = {
+            args: ['-headless'],
+        };
+    }
 }
-if (browserName === 'chrome') {
-    browserCapabilities['goog:chromeOptions'] = {
-        args: ['--headless'],
-    };
-}
-if (browserName === 'firefox') {
-    browserCapabilities['moz:firefoxOptions'] = {
-        args: ['-headless'],
-    };
+
+
+if (browserName === 'Bstack') {
+
 }
 
 export const config: WebdriverIO.Config = {
@@ -137,7 +157,18 @@ export const config: WebdriverIO.Config = {
     // Services take over a specific job you don't want to take care of. They enhance
     // your test setup with almost no effort. Unlike plugins, they don't add new
     // commands. Instead, they hook themselves up into the test process.
-    // services: [],
+    user: process.env.BROWSERSTACK_USERNAME,
+    key: process.env.BROWSERSTACK_ACCESS_KEY,
+     services: [
+        ['browserstack', {
+            testObservability: true,
+            testObservabilityOptions: {
+                projectName: "Your project name goes here",
+                buildName: "The static build job name goes here e.g. Nightly regression"
+            },
+            browserstackLocal: true
+        }]
+     ],
     //
     // Framework you want to run your specs with.
     // The following are supported: Mocha, Jasmine, and Cucumber

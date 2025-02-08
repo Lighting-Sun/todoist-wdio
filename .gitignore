@@ -4,3 +4,5 @@ allure-report
 _results_
 reports
 .env
+local.log
+/logs
