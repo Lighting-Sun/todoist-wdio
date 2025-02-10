@@ -7,7 +7,7 @@ const userEmail = process.env.USEREMAIL!;
 const userPassword = process.env.USERPASSWORD!;
 
 describe('Task creation scenarios', () => {
-
+    let createdTaskNames: Array<string> = []
 
     it('Create a single task @smoke', async () => {
         const taskName = casual.title;
@@ -24,6 +24,7 @@ describe('Task creation scenarios', () => {
         await todayPage.addTaskPopUp.clickAddTaskButton();
         await expect(await todayPage.getTaskNameByName(taskName)).toEqual(taskName);
         await expect(await todayPage.getTaskDescriptionByName(taskName)).toEqual(taskDescription);
+        createdTaskNames.push(taskName)
     });
 
     it('Create a 10 tasks', async () => {
@@ -35,10 +36,12 @@ describe('Task creation scenarios', () => {
         await todayPage.createMultipleTasksByTaskNameAndDescription(taskNames, taskDescriptions);
         await expect(await todayPage.getTaskNames()).toEqual(taskNames);
         await expect(await todayPage.getTaskDescriptions()).toEqual(taskDescriptions);
+        createdTaskNames = taskNames;
     });
 
     afterEach(async () => {
-        await todayPage.deleteAllTasks();
+        await todayPage.deleteAllTasksByTasksName(createdTaskNames);
+        createdTaskNames = [];
     });
 
 });

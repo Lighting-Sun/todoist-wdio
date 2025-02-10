@@ -56,7 +56,15 @@ class TodayPage extends Page{
         allMoreMenuTask: {
             selector: "//button[@data-testid='more_menu']",
             description: "More options button for all taks in today section"
-        }
+        },
+        taskContainerByName: {
+            selector: "//div[@class='task_content'][text()='${value}']/ancestor::div[@class='task_list_item__content']",
+            description: "Selects the task container by name"
+        },
+        moreMenuTaskByTaskName: {
+            selector: "//div[@class='task_content'][text()='ewre']/ancestor::li[@class='task_list_item']//button[@data-testid='more_menu']",
+            description: "More options button for a specific task by name"
+        },
 
     }
 
@@ -165,11 +173,29 @@ class TodayPage extends Page{
     }
 
     /**
+     * Hover over  a task container by name
+     * @param taskName string
+     * @returns Promise<void>
+     */
+    async hoverOverTaskContainerByName(taskName : string): Promise<void> {
+        await this.wDioFactoryUtils.hover(await this.wDioFactoryUtils.getSelectorByValue( this.locators.taskContainerByName, taskName))
+    }
+
+    /**
      * Clicks on the first task more menu button
      * @returns Promise<void>
      */
     async clickOnFirstTaskMoreMenuButton(): Promise<void> {
         await this.wDioFactoryUtils.click(this.locators.allMoreMenuTask);
+    }
+
+    /**
+     * Clicks on more menu button from a given task
+     * @param taskName string
+     * @returns Promise<void>
+     */
+    async clickOnTaskMoreMenuButtonByName(taskName : string): Promise<void> {
+        await this.wDioFactoryUtils.click(await this.wDioFactoryUtils.getSelectorByValue( this.locators.moreMenuTaskByTaskName, taskName))
     }
 
     /**
@@ -186,6 +212,20 @@ class TodayPage extends Page{
             await this.taskMoreMenu.clickDeleteTaskButton();
             await this.deleteTaskDialog.clickDeleteTaskButton();
             isHoverable = await this.wDioFactoryUtils.isHoverable(this.locators.allTaksContainer);
+        }
+    }
+
+    /**
+     * Deletes all tasks given an array of tasks names
+     * @param taskNames Array<String>
+     * @returns Promise<void>
+    */
+    async deleteAllTasksByTasksName(taskNames : Array<string>): Promise<void> {
+        for (const taskName of taskNames) {
+            await this.hoverOverTaskContainerByName(taskName);
+            await this.clickOnTaskMoreMenuButtonByName(taskName);
+            await this.taskMoreMenu.clickDeleteTaskButton();
+            await this.deleteTaskDialog.clickDeleteTaskButton();
         }
     }
 
