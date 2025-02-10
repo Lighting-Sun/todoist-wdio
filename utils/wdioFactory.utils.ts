@@ -47,7 +47,9 @@ export default class WdioFactoryUtils {
     public async setValue(objElement: ObjElement, srtValueToSend: string): Promise<void> {
         const elementSelector = $(objElement.selector);
         const elementDescription = objElement.description;
+        await elementSelector.waitForDisplayed({timeoutMsg: `Element ${elementDescription} is not found before timeout`});
         await elementSelector.waitForEnabled({timeoutMsg: `Element ${elementDescription} is not enabled before timeout`});
+        await elementSelector.waitForClickable({timeoutMsg: `Element ${elementDescription} is not clickable before timeout`});
         await this.click(objElement)
         await elementSelector.setValue(srtValueToSend);
     }
@@ -143,6 +145,10 @@ export default class WdioFactoryUtils {
         return elementDisplayed;
     }
 
+    /**
+     * Waits until an element is stable
+     * @param objElement
+     */
     public async waitForStable(objElement: ObjElement): Promise<void> {
         const elementSelector = $(objElement.selector);
         const elementDescription = objElement.description;

@@ -40,6 +40,22 @@ class TodayPage extends Page{
         todayMoreMenuTask: {
             selector: "//section[contains(@aria-label,'Today')]//button[@data-testid='more_menu']",
             description: "More options button for all taks in today section"
+        },
+        allTasksNames:{
+            selector: "//div[@class='task_list_item__content']//div[@class='task_content']",
+            description: "Tasks names"
+        },
+        allTasksDescriptions:{
+            selector: "//div[@class='task_list_item__content']//div[@class='task_description']",
+            description: "Tasks descriptions"
+        },
+        allTaksContainer:{
+            selector: "//div[@class='task_list_item__content']",
+            description: "All tasks container"
+        },
+        allMoreMenuTask: {
+            selector: "//button[@data-testid='more_menu']",
+            description: "More options button for all taks in today section"
         }
 
     }
@@ -129,7 +145,7 @@ class TodayPage extends Page{
      * @returns Promise<string[]>
      */
     async getTaskNames(): Promise<string[]> {
-        return await this.wDioFactoryUtils.getTextFromElements(this.locators.todayTasksNames);
+        return await this.wDioFactoryUtils.getTextFromElements(this.locators.allTasksNames);
     }
 
     /**
@@ -137,7 +153,7 @@ class TodayPage extends Page{
      * @returns Promise<string[]>
      */
     async getTaskDescriptions(): Promise<string[]> {
-        return await this.wDioFactoryUtils.getTextFromElements(this.locators.todayTasksDescriptions);
+        return await this.wDioFactoryUtils.getTextFromElements(this.locators.allTasksDescriptions);
     }
 
     /**
@@ -145,7 +161,7 @@ class TodayPage extends Page{
      * @returns Promise<void>
      */
     async hoverOverFirstTaskMoreMenu(): Promise<void> {
-        await this.wDioFactoryUtils.hover(this.locators.todayTaksContainer)
+        await this.wDioFactoryUtils.hover(this.locators.allTaksContainer)
     }
 
     /**
@@ -153,7 +169,7 @@ class TodayPage extends Page{
      * @returns Promise<void>
      */
     async clickOnFirstTaskMoreMenuButton(): Promise<void> {
-        await this.wDioFactoryUtils.click(this.locators.todayMoreMenuTask);
+        await this.wDioFactoryUtils.click(this.locators.allMoreMenuTask);
     }
 
     /**
@@ -162,14 +178,14 @@ class TodayPage extends Page{
      */
     async deleteAllTasks(): Promise<void> {
 
-        let isHoverable = await this.wDioFactoryUtils.isHoverable(this.locators.todayTaksContainer);
+        let isHoverable = await this.wDioFactoryUtils.isHoverable(this.locators.allTaksContainer);
 
         while(isHoverable){
             await this.hoverOverFirstTaskMoreMenu();
             await this.clickOnFirstTaskMoreMenuButton();
             await this.taskMoreMenu.clickDeleteTaskButton();
             await this.deleteTaskDialog.clickDeleteTaskButton();
-            isHoverable = await this.wDioFactoryUtils.isHoverable(this.locators.todayTaksContainer);
+            isHoverable = await this.wDioFactoryUtils.isHoverable(this.locators.allTaksContainer);
         }
     }
 

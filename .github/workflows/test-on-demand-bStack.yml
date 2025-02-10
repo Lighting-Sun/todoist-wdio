@@ -1,16 +1,15 @@
-name: test on demand
+name: test on demand BrowserStack
 
 on:
   workflow_dispatch:
     inputs:
       browser:
-        description: "select browser to run"
+        description: "select option"
         required: true
-        default: chrome
+        default: chrome and firefox
         type: choice
         options:
-          - chrome
-          - firefox
+          - chrome and firefox
       suite:
         description: "select suite to run"
         required: false
@@ -33,6 +32,8 @@ jobs:
         USEREMAIL: ${{ secrets.USEREMAIL }}
         USERPASSWORD: ${{ secrets.USERPASSWORD }}
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        BROWSERSTACK_USERNAME : ${{secrets.BROWSERSTACK_USERNAME}}
+        BROWSERSTACK_ACCESS_KEY : ${{secrets.BROWSERSTACK_ACCESS_KEY}}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -45,13 +46,13 @@ jobs:
         run: npm ci --no-fund --no-audit
       - if: ${{ github.event.inputs.suite == 'smoke' }}
         name: Test
-        run: npx wdio wdio.conf.local.ts --browser ${{ github.event.inputs.browser }} --mochaOpts.grep ${{ github.event.inputs.suite }}
+        run: npx wdio wdio.conf.bstack.ts --browser ${{ github.event.inputs.browser }} --mochaOpts.grep ${{ github.event.inputs.suite }}
       - if: ${{ github.event.inputs.suite && github.event.inputs.suite != 'smoke'}}
         name: Test
-        run: npx wdio wdio.conf.local.ts --browser ${{ github.event.inputs.browser }} --suite ${{ github.event.inputs.suite || 'regression' }}
+        run: npx wdio wdio.conf.bstack.ts --browser ${{ github.event.inputs.browser }} --suite ${{ github.event.inputs.suite || 'regression' }}
       - if: ${{! github.event.inputs.suite }}
         name: Test
-        run: npx wdio wdio.conf.local.ts --browser ${{ github.event.inputs.browser }}
+        run: npx wdio wdio.conf.bstack.ts --browser ${{ github.event.inputs.browser }}
       - if: github.event.inputs.artifacts == 'true'
         uses: actions/upload-artifact@v4
         with:
