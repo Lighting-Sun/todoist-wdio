@@ -8,7 +8,7 @@ const userPassword = process.env.USERPASSWORD!;
 describe('Login scenarios', () => {
     const data = JSON.parse(readFileSync('./test/data/testData.json', 'utf8'));
 
-    it('Should successsful login into todoist app @smoke', async () => {
+    it.only('Should successsful login into todoist app @smoke', async () => {
         await loginPage.openPage();
         await loginPage.fillEmail(userEmail);
         await loginPage.fillPassword(userPassword);

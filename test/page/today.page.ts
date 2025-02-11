@@ -1,14 +1,11 @@
 import Page from "./page";
-import Sidebar from "../components/sidebar.component";
-import AddTaskPopUp from "../components/addTaskPopUp.component";
+import AddTask from "../components/addTask.component";
 import TaskMoreMenu from "../components/taskMoreMenu.component";
 import DeleteTaskDialog from "../components/deleteTaskDialog.component";
-import UtilsMethods from "../../utils/utilsMethods.utils";
 
 class TodayPage extends Page{
 
-    sidebar = new Sidebar();
-    addTaskPopUp = new AddTaskPopUp();
+    addTask = new AddTask();
     taskMoreMenu = new TaskMoreMenu();
     deleteTaskDialog = new DeleteTaskDialog();
 
@@ -92,60 +89,6 @@ class TodayPage extends Page{
      */
     async getTaskDescriptionByName(taskName: string): Promise<string> {
         return await this.wDioFactoryUtils.getText(await this.wDioFactoryUtils.getSelectorByValue(this.locators.taskByDescriptionByName, taskName));
-    }
-
-    /**
-     * creates a task using the taskName and taskDescription passed as parameters
-     * @param taskName
-     * @param taskDescription
-     */
-    async createTask(taskName: string, taskDescription: string): Promise<void> {
-        await this.sidebar.clickAddTaskButton();
-        await this.wDioFactoryUtils.waitForStable(this.addTaskPopUp.locators.quickAddDialog);
-        await this.addTaskPopUp.fillTaskName(taskName);
-        await this.addTaskPopUp.fillTaskDescription(taskDescription);
-        await this.addTaskPopUp.clickAddTaskButton();
-    }
-
-    /**
-     * Creates multiple tasks using the numberOfTasks passed as parameter
-     * returns an object with the taskNames and taskDescriptions
-     * @param numberOfTasks
-     * @returns Promise<{taskNames: string[], taskDescriptions: string[]}>
-     */
-    async createMultipleTasksByNumber( numberOfTasks: number): Promise<{taskNames: string[], taskDescriptions: string[]}> {
-        if  (numberOfTasks < 1) {
-            throw new Error('numberOfTasks must be greater than 0');
-        }
-        const taskNames: string[] = new Array(numberOfTasks);
-        const taskDescriptions: string[] = new Array(numberOfTasks);
-
-        for (let index = 0; index < numberOfTasks; index++) {
-            taskNames[index] = await UtilsMethods.getRandomString();
-            taskDescriptions[index] = await UtilsMethods.getRandomString();
-            await this.createTask(taskNames[index], taskDescriptions[index]);
-        }
-
-        return await {taskNames, taskDescriptions};
-    }
-
-    /**
-     * Creates multiple tasks using the taskNames and taskDescriptions passed as parameters
-     * @param taskNames
-     * @param taskDescriptions
-     */
-    async createMultipleTasksByTaskNameAndDescription( taskNames: string[], taskDescriptions: string[]): Promise<void> {
-        if (taskNames.length < 1 || taskDescriptions.length < 1) {
-            throw new Error('taskNames and descriptions must have at least one element');
-        }
-
-        if  (taskNames.length !== taskDescriptions.length) {
-            throw new Error('taskNames and taskDescriptions must have the same length');
-        }
-
-        for (let index = 0; index < taskNames.length; index++) {
-            await this.createTask(taskNames[index], taskDescriptions[index]);
-        }
     }
 
     /**
