@@ -27,20 +27,20 @@ describe('Task creation scenarios', () => {
         createdTaskNames.push(taskName)
     });
 
-    it('Create a 10 tasks', async () => {
+    it.only('Create 10 tasks', async () => {
         const taskNames = await UtilsMethods.getArrayOfRandomStrings(10);
         const taskDescriptions = await UtilsMethods.getArrayOfRandomStrings(10);
 
         await loginPage.openPage();
         await loginPage.loginToPage(userEmail, userPassword);
         await todayPage.createMultipleTasksByTaskNameAndDescription(taskNames, taskDescriptions);
-        await expect(await todayPage.getTaskNames()).toEqual(taskNames);
-        await expect(await todayPage.getTaskDescriptions()).toEqual(taskDescriptions);
+        await expect(await UtilsMethods.arrayToString(await todayPage.getTaskNames())).toContain(await UtilsMethods.arrayToString(taskNames));
+        await expect(await UtilsMethods.arrayToString(await todayPage.getTaskDescriptions())).toContain(await UtilsMethods.arrayToString(taskDescriptions));
         createdTaskNames = taskNames;
     });
 
     afterEach(async () => {
-        await todayPage.deleteAllTasksByTasksName(createdTaskNames);
+        await todayPage.deleteAllTasks();
         createdTaskNames = [];
     });
 

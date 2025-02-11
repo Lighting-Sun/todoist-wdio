@@ -19,7 +19,7 @@ const browserCapabilities: WebdriverIO.Capabilities = {
 }
 if (browserName === 'chrome') {
     browserCapabilities['goog:chromeOptions'] = {
-        args: [],
+        args: ['headless', 'disable-gpu'],
     };
 }
 if (browserName === 'firefox') {

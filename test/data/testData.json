@@ -2,7 +2,7 @@
     "users":{
         "invalidUser": {
             "email": "cortesjarveyw@gmail.com",
-            "password": "Cortes11"
+            "password": "Cortes10"
         },
         "emptyUser": {
             "email": "",

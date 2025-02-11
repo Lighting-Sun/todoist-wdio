@@ -22,7 +22,6 @@ export default class WdioFactoryUtils {
         await elementSelector.click();
     }
 
-
     /**
      * Returns the selector and description of an element by replacing the placeholder ${value} with the value provided
      * @param objElement an object containing the selector and description of the element
@@ -155,4 +154,16 @@ export default class WdioFactoryUtils {
         await elementSelector.waitForStable({timeout: 7000,timeoutMsg: `Element ${elementDescription} is not stable (no animated) before timeout`}).catch(() => false);
     }
 
+    /**
+     * Waits for the hex color of a web element to be the one passed in the function
+     * @param objElement an object containing the selector and description of the element
+     * @param hexColor the of the hex color that it will wait for
+     * @returns an object containing the selector and description of the element of type ObjElement
+     */
+    async waitForCssBackgroundColor (objElement: ObjElement, hexColor : string){
+        const elementSelector = $(objElement.selector);
+        await browser.waitUntil(async () => {
+            return (await elementSelector.getCSSProperty('background-color')).parsed.hex === hexColor
+        })
+    }
 }

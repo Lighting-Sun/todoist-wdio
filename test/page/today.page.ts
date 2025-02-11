@@ -62,7 +62,7 @@ class TodayPage extends Page{
             description: "Selects the task container by name"
         },
         moreMenuTaskByTaskName: {
-            selector: "//div[@class='task_content'][text()='ewre']/ancestor::li[@class='task_list_item']//button[@data-testid='more_menu']",
+            selector: "//div[@class='task_content'][text()='${value}']/ancestor::li[@class='task_list_item']//button[@data-testid='more_menu']",
             description: "More options button for a specific task by name"
         },
 

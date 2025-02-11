@@ -14,6 +14,9 @@ class Sidebar extends BaseComponent{
      * @returns Promise<void>
      */
     async clickAddTaskButton(): Promise<void> {
+        await this.wdioFactoryUtils.hover(this.locators.addTaskButton);
+        await this.wdioFactoryUtils.waitForStable(this.locators.addTaskButton);
+        await this.wdioFactoryUtils.waitForCssBackgroundColor(this.locators.addTaskButton,'#f2efed')
         await this.wdioFactoryUtils.click(this.locators.addTaskButton);
     }
 }
