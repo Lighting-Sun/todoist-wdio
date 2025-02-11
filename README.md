@@ -96,6 +96,16 @@ These plugins are Prettier and ESlint
 2. In Visual Studio Code, open new terminal clicking top bar, click Terminal, then click New Terminal
 3. Type `npm install` and wait all packages will be downloaded
 
+4. create a .env file inside the root project folder (Make sure to ask the owner for the values)
+
+```
+USEREMAIL=
+USERPASSWORD=
+SLACK_WEBHOOK_URL=
+BROWSERSTACK_USERNAME = 
+BROWSERSTACK_ACCESS_KEY =
+```
+
 * To Run All test cases type
   ```
   npx wdio wdio.conf.local.ts
