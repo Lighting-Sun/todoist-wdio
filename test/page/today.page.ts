@@ -166,6 +166,7 @@ class TodayPage extends Page{
     async deleteAllTasksByTasksName(taskNames : Array<string>): Promise<void> {
         for (const taskName of taskNames) {
             await this.hoverOverTaskContainerByName(taskName);
+            await this.wDioFactoryUtils.hover(await this.wDioFactoryUtils.getSelectorByValue( this.locators.moreMenuTaskByTaskName, taskName))
             await this.clickOnTaskMoreMenuButtonByName(taskName);
             await this.taskMoreMenu.clickDeleteTaskButton();
             await this.deleteTaskDialog.clickDeleteTaskButton();
