@@ -24,4 +24,11 @@ class UtilsMethods {
         return randomStrings;
     }
 
+    public static async arrayToString(arrayOfItems: Array<any>, separator?: string): Promise<string> {
+        if (separator){
+            return arrayOfItems.join(separator);
+        }
+        return arrayOfItems.join('');
+    }
+
 }export default UtilsMethods;

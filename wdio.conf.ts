@@ -1,32 +1,10 @@
 import SlackReporter from '@moroo/wdio-slack-reporter';
 import allure from 'allure-commandline';
 import fs from 'fs';
-import yargs from 'yargs';
-import { hideBin } from 'yargs/helpers';
 
-const argv = yargs(hideBin(process.argv))
-    .option('browser', {
-    type: 'string',
-    description: 'Specify browser to run tests in'
-}).parseSync();
 
 const allureDir = './reports/allure';
 
-
-const browserName = argv.browser || 'chrome';
-const browserCapabilities: WebdriverIO.Capabilities = {
-    browserName,
-}
-if (browserName === 'chrome') {
-    browserCapabilities['goog:chromeOptions'] = {
-        args: ['--headless'],
-    };
-}
-if (browserName === 'firefox') {
-    browserCapabilities['moz:firefoxOptions'] = {
-        args: ['-headless'],
-    };
-}
 
 export const config: WebdriverIO.Config = {
 
@@ -88,7 +66,7 @@ export const config: WebdriverIO.Config = {
     // Sauce Labs platform configurator - a great tool to configure your capabilities:
     // https://saucelabs.com/platform/platform-configurator
     //
-    capabilities: [browserCapabilities],
+    capabilities: [],
 
     //
     // ===================
@@ -124,7 +102,7 @@ export const config: WebdriverIO.Config = {
     baseUrl: 'https://todoist.com/',
     //
     // Default timeout for all waitFor* commands.
-    waitforTimeout: 10000,
+    waitforTimeout: 16000,
     //
     // Default timeout in milliseconds for request
     // if browser driver or grid doesn't send response
@@ -137,7 +115,7 @@ export const config: WebdriverIO.Config = {
     // Services take over a specific job you don't want to take care of. They enhance
     // your test setup with almost no effort. Unlike plugins, they don't add new
     // commands. Instead, they hook themselves up into the test process.
-    // services: [],
+    services: [],
     //
     // Framework you want to run your specs with.
     // The following are supported: Mocha, Jasmine, and Cucumber
@@ -177,7 +155,7 @@ export const config: WebdriverIO.Config = {
     // See the full list at http://mochajs.org/
     mochaOpts: {
         ui: 'bdd',
-        timeout: 240000
+        timeout: 400000
     },
 
     //

@@ -1,14 +1,11 @@
 import Page from "./page";
-import Sidebar from "../components/sidebar.component";
-import AddTaskPopUp from "../components/addTaskPopUp.component";
+import AddTask from "../components/addTask.component";
 import TaskMoreMenu from "../components/taskMoreMenu.component";
 import DeleteTaskDialog from "../components/deleteTaskDialog.component";
-import UtilsMethods from "../../utils/utilsMethods.utils";
 
 class TodayPage extends Page{
 
-    sidebar = new Sidebar();
-    addTaskPopUp = new AddTaskPopUp();
+    addTask = new AddTask();
     taskMoreMenu = new TaskMoreMenu();
     deleteTaskDialog = new DeleteTaskDialog();
 
@@ -40,7 +37,31 @@ class TodayPage extends Page{
         todayMoreMenuTask: {
             selector: "//section[contains(@aria-label,'Today')]//button[@data-testid='more_menu']",
             description: "More options button for all taks in today section"
-        }
+        },
+        allTasksNames:{
+            selector: "//div[@class='task_list_item__content']//div[@class='task_content']",
+            description: "Tasks names"
+        },
+        allTasksDescriptions:{
+            selector: "//div[@class='task_list_item__content']//div[@class='task_description']",
+            description: "Tasks descriptions"
+        },
+        allTaksContainer:{
+            selector: "//div[@class='task_list_item__content']",
+            description: "All tasks container"
+        },
+        allMoreMenuTask: {
+            selector: "//button[@data-testid='more_menu']",
+            description: "More options button for all taks in today section"
+        },
+        taskContainerByName: {
+            selector: "//div[@class='task_content'][text()='${value}']/ancestor::div[@class='task_list_item__content']",
+            description: "Selects the task container by name"
+        },
+        moreMenuTaskByTaskName: {
+            selector: "//div[@class='task_content'][text()='${value}']/ancestor::li[@class='task_list_item']//button[@data-testid='more_menu']",
+            description: "More options button for a specific task by name"
+        },
 
     }
 
@@ -71,65 +92,11 @@ class TodayPage extends Page{
     }
 
     /**
-     * creates a task using the taskName and taskDescription passed as parameters
-     * @param taskName
-     * @param taskDescription
-     */
-    async createTask(taskName: string, taskDescription: string): Promise<void> {
-        await this.sidebar.clickAddTaskButton();
-        await this.wDioFactoryUtils.waitForStable(this.addTaskPopUp.locators.quickAddDialog);
-        await this.addTaskPopUp.fillTaskName(taskName);
-        await this.addTaskPopUp.fillTaskDescription(taskDescription);
-        await this.addTaskPopUp.clickAddTaskButton();
-    }
-
-    /**
-     * Creates multiple tasks using the numberOfTasks passed as parameter
-     * returns an object with the taskNames and taskDescriptions
-     * @param numberOfTasks
-     * @returns Promise<{taskNames: string[], taskDescriptions: string[]}>
-     */
-    async createMultipleTasksByNumber( numberOfTasks: number): Promise<{taskNames: string[], taskDescriptions: string[]}> {
-        if  (numberOfTasks < 1) {
-            throw new Error('numberOfTasks must be greater than 0');
-        }
-        const taskNames: string[] = new Array(numberOfTasks);
-        const taskDescriptions: string[] = new Array(numberOfTasks);
-
-        for (let index = 0; index < numberOfTasks; index++) {
-            taskNames[index] = await UtilsMethods.getRandomString();
-            taskDescriptions[index] = await UtilsMethods.getRandomString();
-            await this.createTask(taskNames[index], taskDescriptions[index]);
-        }
-
-        return await {taskNames, taskDescriptions};
-    }
-
-    /**
-     * Creates multiple tasks using the taskNames and taskDescriptions passed as parameters
-     * @param taskNames
-     * @param taskDescriptions
-     */
-    async createMultipleTasksByTaskNameAndDescription( taskNames: string[], taskDescriptions: string[]): Promise<void> {
-        if (taskNames.length < 1 || taskDescriptions.length < 1) {
-            throw new Error('taskNames and descriptions must have at least one element');
-        }
-
-        if  (taskNames.length !== taskDescriptions.length) {
-            throw new Error('taskNames and taskDescriptions must have the same length');
-        }
-
-        for (let index = 0; index < taskNames.length; index++) {
-            await this.createTask(taskNames[index], taskDescriptions[index]);
-        }
-    }
-
-    /**
      * Gets the task names
      * @returns Promise<string[]>
      */
     async getTaskNames(): Promise<string[]> {
-        return await this.wDioFactoryUtils.getTextFromElements(this.locators.todayTasksNames);
+        return await this.wDioFactoryUtils.getTextFromElements(this.locators.allTasksNames);
     }
 
     /**
@@ -137,7 +104,7 @@ class TodayPage extends Page{
      * @returns Promise<string[]>
      */
     async getTaskDescriptions(): Promise<string[]> {
-        return await this.wDioFactoryUtils.getTextFromElements(this.locators.todayTasksDescriptions);
+        return await this.wDioFactoryUtils.getTextFromElements(this.locators.allTasksDescriptions);
     }
 
     /**
@@ -145,7 +112,16 @@ class TodayPage extends Page{
      * @returns Promise<void>
      */
     async hoverOverFirstTaskMoreMenu(): Promise<void> {
-        await this.wDioFactoryUtils.hover(this.locators.todayTaksContainer)
+        await this.wDioFactoryUtils.hover(this.locators.allTaksContainer)
+    }
+
+    /**
+     * Hover over  a task container by name
+     * @param taskName string
+     * @returns Promise<void>
+     */
+    async hoverOverTaskContainerByName(taskName : string): Promise<void> {
+        await this.wDioFactoryUtils.hover(await this.wDioFactoryUtils.getSelectorByValue( this.locators.taskContainerByName, taskName))
     }
 
     /**
@@ -153,7 +129,16 @@ class TodayPage extends Page{
      * @returns Promise<void>
      */
     async clickOnFirstTaskMoreMenuButton(): Promise<void> {
-        await this.wDioFactoryUtils.click(this.locators.todayMoreMenuTask);
+        await this.wDioFactoryUtils.click(this.locators.allMoreMenuTask);
+    }
+
+    /**
+     * Clicks on more menu button from a given task
+     * @param taskName string
+     * @returns Promise<void>
+     */
+    async clickOnTaskMoreMenuButtonByName(taskName : string): Promise<void> {
+        await this.wDioFactoryUtils.click(await this.wDioFactoryUtils.getSelectorByValue( this.locators.moreMenuTaskByTaskName, taskName))
     }
 
     /**
@@ -162,14 +147,29 @@ class TodayPage extends Page{
      */
     async deleteAllTasks(): Promise<void> {
 
-        let isHoverable = await this.wDioFactoryUtils.isHoverable(this.locators.todayTaksContainer);
+        let isHoverable = await this.wDioFactoryUtils.isHoverable(this.locators.allTaksContainer);
 
         while(isHoverable){
             await this.hoverOverFirstTaskMoreMenu();
             await this.clickOnFirstTaskMoreMenuButton();
             await this.taskMoreMenu.clickDeleteTaskButton();
             await this.deleteTaskDialog.clickDeleteTaskButton();
-            isHoverable = await this.wDioFactoryUtils.isHoverable(this.locators.todayTaksContainer);
+            isHoverable = await this.wDioFactoryUtils.isHoverable(this.locators.allTaksContainer);
+        }
+    }
+
+    /**
+     * Deletes all tasks given an array of tasks names
+     * @param taskNames Array<String>
+     * @returns Promise<void>
+    */
+    async deleteAllTasksByTasksName(taskNames : Array<string>): Promise<void> {
+        for (const taskName of taskNames) {
+            await this.hoverOverTaskContainerByName(taskName);
+            await this.wDioFactoryUtils.hover(await this.wDioFactoryUtils.getSelectorByValue( this.locators.moreMenuTaskByTaskName, taskName))
+            await this.clickOnTaskMoreMenuButtonByName(taskName);
+            await this.taskMoreMenu.clickDeleteTaskButton();
+            await this.deleteTaskDialog.clickDeleteTaskButton();
         }
     }
 
