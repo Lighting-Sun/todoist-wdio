@@ -9,7 +9,7 @@ You can run this repository without downloading it
 2. Select the **CI on Demand** Option
 3. Click on the **Run Workflow** Option  
 4. you can customize your run by selecting **browser** and **suite**
-5. Optionally you can also check the allure report option if you want to be able to download the allure report (see [Visual Studio Code]() section bellow on how to visualize the report)
+5. Optionally you can also check the allure report option if you want to be able to download the allure report (see [Visual Studio Code](https://github.com/Lighting-Sun/todoist-wdio/blob/main/README.md#visual-studio-code-only-follow-this-if-you-want-to-open-the-resulting-allure-report) section bellow on how to visualize the report)
 6. Click on run worflow (you might need to reload the page so the new execution is visible)
 
 ### Custom run using the project using github actions BrowserStack run
@@ -20,7 +20,7 @@ You can run this repository without downloading it
 2. Select the **test on demand BrowserStack** Option
 3. Click on the **Run Workflow** Option  
 4. you can customize your run by selecting **browser** and **suite**
-5. Optionally you can also check the allure report option if you want to be able to download the allure report (see [Visual Studio Code](https://github.com/Lighting-Sun/wdio-framework/edit/main/README.md#visual-studio-code-only-follow-this-if-you-want-to-open-the-resulting-allure-report) section bellow on how to visualize the report)
+5. Optionally you can also check the allure report option if you want to be able to download the allure report (see [Visual Studio Code](https://github.com/Lighting-Sun/todoist-wdio/blob/main/README.md#visual-studio-code-only-follow-this-if-you-want-to-open-the-resulting-allure-report) section bellow on how to visualize the report)
 6. Click on run worflow (you might need to reload the page so the new execution is visible)
 
 #### Checking execution details
