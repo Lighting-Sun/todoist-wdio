@@ -32,6 +32,7 @@ class AddTask extends BaseComponent{
      * @returns Promise<void>
      */
     async clickAddTaskButton(): Promise<void> {
+        await this.wdioFactoryUtils.scrollTo(this.locators.addTaskButton);
         await this.wdioFactoryUtils.hover(this.locators.addTaskButton);
         await this.wdioFactoryUtils.waitForStable(this.locators.addTaskButton);
         await this.wdioFactoryUtils.click(this.locators.addTaskButton);

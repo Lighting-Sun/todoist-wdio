@@ -63,6 +63,8 @@ export default class WdioFactoryUtils {
             const elementDescription = objElement.description;
             await elementSelector.waitForDisplayed({timeoutMsg: `Element ${elementDescription} is not found before timeout`});
             await elementSelector.waitForEnabled({timeoutMsg: `Element ${elementDescription} is not enabled before timeout`});
+            await elementSelector.scrollIntoView({behavior :'smooth' , block: 'center'});
+            await elementSelector.waitForStable();
             await elementSelector.waitForClickable({timeoutMsg: `Element ${elementDescription} is not clickable before timeout`});
             await this.click(objElement)
             for (const characters of srtValueToSend) {
@@ -165,5 +167,21 @@ export default class WdioFactoryUtils {
         await browser.waitUntil(async () => {
             return (await elementSelector.getCSSProperty('background-color')).parsed.hex === hexColor
         })
+    }
+
+
+    /**
+     * Waits for a web element to be scrolled into view and hovers it
+     * @param objElement an object containing the selector and description of the element
+     */
+    public async scrollTo (objElement: ObjElement): Promise<void> {
+        const elementSelector = $(objElement.selector);
+        const elementDescription = objElement.description;
+
+        await elementSelector.scrollIntoView({behavior :'smooth' , block: 'center'});
+        await elementSelector.waitForStable();
+        await elementSelector.waitForClickable({timeoutMsg: `Element ${elementDescription} is not clickable before timeout`});
+        await elementSelector.moveTo();
+        await elementSelector.waitForStable();
     }
 }
