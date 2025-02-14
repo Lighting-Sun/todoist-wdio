@@ -1,5 +1,6 @@
 
 import casual from 'casual';
+import { error } from 'console';
 
 class UtilsMethods {
 
@@ -29,6 +30,20 @@ class UtilsMethods {
             return arrayOfItems.join(separator);
         }
         return arrayOfItems.join('');
+    }
+
+    /**
+     * Checks wether an array is contained within another array
+     * @param array array that is suspected to be contained within another array
+     * @param targetArray array that may coontain 'array' parameter
+     * @returns boolean
+     * @throws error if the array types differ
+     */
+    public static async arrayIsContained (array: Array<any>, targetArray: Array<any> ) : Promise<boolean> {
+        if (typeof(array) !== typeof(targetArray)) {
+            throw error("Array types are different");
+        }
+        return array.every(elem => targetArray.includes(elem));
     }
 
 }export default UtilsMethods;
