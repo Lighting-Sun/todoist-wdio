@@ -121,7 +121,8 @@ class TodayPage extends Page{
      * @returns Promise<void>
      */
     async hoverOverTaskContainerByName(taskName : string): Promise<void> {
-        await this.wDioFactoryUtils.hover(await this.wDioFactoryUtils.getSelectorByValue( this.locators.taskContainerByName, taskName))
+        await this.wDioFactoryUtils.scrollTo(await this.wDioFactoryUtils.getSelectorByValue( this.locators.taskContainerByName, taskName));
+        await this.wDioFactoryUtils.hover(await this.wDioFactoryUtils.getSelectorByValue( this.locators.taskContainerByName, taskName));
     }
 
     /**
@@ -138,6 +139,7 @@ class TodayPage extends Page{
      * @returns Promise<void>
      */
     async clickOnTaskMoreMenuButtonByName(taskName : string): Promise<void> {
+        await this.wDioFactoryUtils.scrollTo(await this.wDioFactoryUtils.getSelectorByValue( this.locators.taskContainerByName, taskName));
         await this.wDioFactoryUtils.click(await this.wDioFactoryUtils.getSelectorByValue( this.locators.moreMenuTaskByTaskName, taskName))
     }
 
