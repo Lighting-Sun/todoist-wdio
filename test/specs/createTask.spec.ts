@@ -8,7 +8,7 @@ const userPassword = process.env.USERPASSWORD!;
 
 describe('Task creation scenarios', () => {
 
-    it.only('Create 10 tasks', async () => {
+    it('Create 10 tasks', async () => {
         const taskNames = await UtilsMethods.getArrayOfRandomStrings(10);
         const taskDescriptions = await UtilsMethods.getArrayOfRandomStrings(10);
         await loginPage.openPage();
