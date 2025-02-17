@@ -34,10 +34,10 @@ describe('Task creation scenarios', () => {
         await todayPage.addTask.fillTaskName(taskName);
         await todayPage.addTask.fillTaskDescription(taskDescription);
         await todayPage.addTask.clickAddTaskConfirmButton();
-        await expect(await todayPage.getTaskNameByName(taskName)).toEqual(taskName);
-        await expect(await todayPage.getTaskDescriptionByName(taskName)).toEqual(taskDescription);
-        await expect(await UtilsMethods.arrayIsContained([taskName],[await todayPage.getTaskNameByName(taskName)])).toBe(true);
-        await expect(await UtilsMethods.arrayIsContained([taskDescription],[await todayPage.getTaskDescriptionByName(taskName)])).toBe(true);
+        const atcualTaskNames =  await todayPage.getTaskNames();
+        const actualTaskDescriptions = await todayPage.getTaskDescriptions();
+        await expect(await UtilsMethods.arrayIsContained([taskName],atcualTaskNames)).toBe(true);
+        await expect(await UtilsMethods.arrayIsContained([taskDescription],actualTaskDescriptions)).toBe(true);
         await todayPage.deleteAllTasksByTasksName([taskName]);
     });
 

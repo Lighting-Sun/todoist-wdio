@@ -13,7 +13,7 @@ class TaskMoreMenu extends BaseComponent{
      * Clicks on the delete task button
      * @returns Promise<void>
      */
-    async clickDeleteTaskButton(): Promise<void> {
+    async clickDeleteTaskButtonMoreMenu(): Promise<void> {
         await this.wdioFactoryUtils.click(this.locators.deleteTaskButton);
     }
 

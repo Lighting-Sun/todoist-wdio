@@ -2,12 +2,16 @@ import Page from "./page";
 import AddTask from "../components/addTask.component";
 import TaskMoreMenu from "../components/taskMoreMenu.component";
 import DeleteTaskDialog from "../components/deleteTaskDialog.component";
+import Sidemenu from "../components/sidemenu.component";
+import UserOptions from "../components/userOptions.component";
 
 class TodayPage extends Page{
 
     addTask = new AddTask();
     taskMoreMenu = new TaskMoreMenu();
     deleteTaskDialog = new DeleteTaskDialog();
+    sidemenu = new Sidemenu();
+    userOptions = new UserOptions();
 
     locators = {
         todayPage:{
@@ -112,7 +116,7 @@ class TodayPage extends Page{
      * @returns Promise<void>
      */
     async hoverOverFirstTaskMoreMenu(): Promise<void> {
-        await this.wDioFactoryUtils.hover(this.locators.allTaksContainer)
+        await this.wDioFactoryUtils.hover(this.locators.allTaksContainer);
     }
 
     /**
@@ -121,7 +125,18 @@ class TodayPage extends Page{
      * @returns Promise<void>
      */
     async hoverOverTaskContainerByName(taskName : string): Promise<void> {
-        await this.wDioFactoryUtils.hover(await this.wDioFactoryUtils.getSelectorByValue( this.locators.taskContainerByName, taskName))
+        await this.wDioFactoryUtils.scrollTo(await this.wDioFactoryUtils.getSelectorByValue( this.locators.taskContainerByName, taskName));
+        await this.wDioFactoryUtils.hover(await this.wDioFactoryUtils.getSelectorByValue( this.locators.taskContainerByName, taskName));
+    }
+
+    /**
+     * Hover over  a task container by name
+     * @param taskName string
+     * @returns Promise<void>
+     */
+    async hoverOverTaskMoreMenuByName(taskName : string): Promise<void> {
+        await this.wDioFactoryUtils.scrollTo(await this.wDioFactoryUtils.getSelectorByValue(this.locators.moreMenuTaskByTaskName, taskName));
+        await this.wDioFactoryUtils.hover(await this.wDioFactoryUtils.getSelectorByValue( this.locators.moreMenuTaskByTaskName, taskName));
     }
 
     /**
@@ -138,7 +153,7 @@ class TodayPage extends Page{
      * @returns Promise<void>
      */
     async clickOnTaskMoreMenuButtonByName(taskName : string): Promise<void> {
-        await this.wDioFactoryUtils.click(await this.wDioFactoryUtils.getSelectorByValue( this.locators.moreMenuTaskByTaskName, taskName))
+        await this.wDioFactoryUtils.click(await this.wDioFactoryUtils.getSelectorByValue( this.locators.moreMenuTaskByTaskName, taskName));
     }
 
     /**
@@ -152,7 +167,7 @@ class TodayPage extends Page{
         while(isHoverable){
             await this.hoverOverFirstTaskMoreMenu();
             await this.clickOnFirstTaskMoreMenuButton();
-            await this.taskMoreMenu.clickDeleteTaskButton();
+            await this.taskMoreMenu.clickDeleteTaskButtonMoreMenu();
             await this.deleteTaskDialog.clickDeleteTaskButton();
             isHoverable = await this.wDioFactoryUtils.isHoverable(this.locators.allTaksContainer);
         }
@@ -164,11 +179,11 @@ class TodayPage extends Page{
      * @returns Promise<void>
     */
     async deleteAllTasksByTasksName(taskNames : Array<string>): Promise<void> {
-        for (const taskName of taskNames) {
+        for await (const taskName of taskNames) {
             await this.hoverOverTaskContainerByName(taskName);
-            await this.wDioFactoryUtils.hover(await this.wDioFactoryUtils.getSelectorByValue( this.locators.moreMenuTaskByTaskName, taskName))
+            await this.hoverOverTaskMoreMenuByName(taskName);
             await this.clickOnTaskMoreMenuButtonByName(taskName);
-            await this.taskMoreMenu.clickDeleteTaskButton();
+            await this.taskMoreMenu.clickDeleteTaskButtonMoreMenu();
             await this.deleteTaskDialog.clickDeleteTaskButton();
         }
     }
