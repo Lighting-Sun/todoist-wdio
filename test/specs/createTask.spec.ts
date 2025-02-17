@@ -8,7 +8,7 @@ const userPassword = process.env.USERPASSWORD!;
 
 describe('Task creation scenarios', () => {
 
-    it('Create 10 tasks', async () => {
+    it.only('Create 10 tasks', async () => {
         const taskNames = await UtilsMethods.getArrayOfRandomStrings(10);
         const taskDescriptions = await UtilsMethods.getArrayOfRandomStrings(10);
         await loginPage.openPage();
@@ -42,5 +42,4 @@ describe('Task creation scenarios', () => {
         await expect(await UtilsMethods.arrayIsContained([taskDescription],actualTaskDescriptions)).toBe(true);
         await todayPage.deleteAllTasksByTasksName([taskName]);
     });
-
 });

@@ -4,6 +4,7 @@ import TaskMoreMenu from "../components/taskMoreMenu.component";
 import DeleteTaskDialog from "../components/deleteTaskDialog.component";
 import Sidemenu from "../components/sidemenu.component";
 import UserOptions from "../components/userOptions.component";
+import UtilsMethods from "../../utils/utilsMethods.utils";
 
 class TodayPage extends Page{
 
@@ -179,12 +180,14 @@ class TodayPage extends Page{
      * @returns Promise<void>
     */
     async deleteAllTasksByTasksName(taskNames : Array<string>): Promise<void> {
-        for (const taskName of taskNames) {
-            await this.hoverOverTaskContainerByName(taskName);
-            await this.hoverOverTaskMoreMenuByName(taskName);
-            await this.clickOnTaskMoreMenuButtonByName(taskName);
+        let taskName = await UtilsMethods.asyncShift(taskNames);
+        while(taskName !== undefined){
+            await this.hoverOverTaskContainerByName(taskName!);
+            await this.hoverOverTaskMoreMenuByName(taskName!);
+            await this.clickOnTaskMoreMenuButtonByName(taskName!);
             await this.taskMoreMenu.clickDeleteTaskButtonMoreMenu();
             await this.deleteTaskDialog.clickDeleteTaskButton();
+            taskName = await UtilsMethods.asyncShift(taskNames);
         }
     }
 

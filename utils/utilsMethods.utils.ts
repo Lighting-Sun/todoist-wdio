@@ -44,6 +44,14 @@ class UtilsMethods {
             throw error("Array types are different");
         }
         return array.every(elem => targetArray.includes(elem));
-    }
+    };
+
+    public static async asyncShift<T>(arr: T[]): Promise<T | undefined> {
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            resolve(arr.shift());
+          }, 300);
+        });
+    };
 
 }export default UtilsMethods;

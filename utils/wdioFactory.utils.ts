@@ -16,6 +16,7 @@ export default class WdioFactoryUtils {
     public async click(objElement: ObjElement): Promise<void> {
         const elementSelector = $(objElement.selector);
         const elementDescription = objElement.description;
+        await this.scrollTo(objElement);
         await elementSelector.waitForClickable({timeoutMsg: `Element ${elementDescription} is not clickable before timeout`});
         await elementSelector.click();
     }
