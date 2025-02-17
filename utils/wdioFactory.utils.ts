@@ -177,6 +177,9 @@ export default class WdioFactoryUtils {
         const elementDescription = objElement.description;
 
         await elementSelector.scrollIntoView({behavior :'smooth' , block: 'center'});
+        await elementSelector.waitForStable();
+        await elementSelector.waitForClickable({timeoutMsg: `Element ${elementDescription} is not clickable before timeout`});
+        await elementSelector.scrollIntoView({behavior :'smooth' , block: 'center'});
         await elementSelector.moveTo();
     }
 }
