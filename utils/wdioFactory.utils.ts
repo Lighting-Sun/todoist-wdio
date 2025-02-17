@@ -16,9 +16,8 @@ export default class WdioFactoryUtils {
     public async click(objElement: ObjElement): Promise<void> {
         const elementSelector = $(objElement.selector);
         const elementDescription = objElement.description;
+        await this.scrollTo(objElement);
         await elementSelector.waitForClickable({timeoutMsg: `Element ${elementDescription} is not clickable before timeout`});
-        await elementSelector.moveTo();
-        await this.waitForStable(objElement);
         await elementSelector.click();
     }
 
@@ -64,9 +63,8 @@ export default class WdioFactoryUtils {
             await elementSelector.waitForDisplayed({timeoutMsg: `Element ${elementDescription} is not found before timeout`});
             await elementSelector.waitForEnabled({timeoutMsg: `Element ${elementDescription} is not enabled before timeout`});
             await elementSelector.scrollIntoView({behavior :'smooth' , block: 'center'});
-            await elementSelector.waitForStable();
             await elementSelector.waitForClickable({timeoutMsg: `Element ${elementDescription} is not clickable before timeout`});
-            await this.click(objElement)
+            await this.click(objElement);
             for (const characters of srtValueToSend) {
                 await browser.keys(characters);
             }
@@ -130,7 +128,8 @@ export default class WdioFactoryUtils {
     public async hover(objElement: ObjElement): Promise<void> {
         const elementSelector = $(objElement.selector);
         const elementDescription = objElement.description;
-        await elementSelector.waitForDisplayed({timeoutMsg: `Element ${elementDescription} is not found before timeout`});
+        await elementSelector.waitForExist({timeoutMsg: `Element ${elementDescription} is not found before timeout`});
+        await elementSelector.scrollIntoView({behavior :'smooth'});
         await elementSelector.moveTo();
     }
 
@@ -178,10 +177,10 @@ export default class WdioFactoryUtils {
         const elementSelector = $(objElement.selector);
         const elementDescription = objElement.description;
 
-        await elementSelector.scrollIntoView({behavior :'smooth' , block: 'center'});
+        await elementSelector.scrollIntoView({behavior :'smooth'});
         await elementSelector.waitForStable();
         await elementSelector.waitForClickable({timeoutMsg: `Element ${elementDescription} is not clickable before timeout`});
+        await elementSelector.scrollIntoView({behavior :'smooth'});
         await elementSelector.moveTo();
-        await elementSelector.waitForStable();
     }
 }

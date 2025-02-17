@@ -6,6 +6,10 @@ class DeleteTaskDialog extends BaseComponent{
         confirmDeleteTaskButton:{
             selector: "//div[@role='dialog']//span[text()='Delete']/parent::button",
             description: "Delete task button"
+        },
+        confirmDeleteTaskDialog: {
+            selector: "[role='dialog']",
+            description: "Delete task button"
         }
     }
 

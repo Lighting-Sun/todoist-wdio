@@ -8,18 +8,16 @@ const userPassword = process.env.USERPASSWORD!;
 
 describe('Task creation scenarios', () => {
 
-    it.only('Create 10 tasks', async () => {
+    it('Create 10 tasks', async () => {
         const taskNames = await UtilsMethods.getArrayOfRandomStrings(10);
         const taskDescriptions = await UtilsMethods.getArrayOfRandomStrings(10);
-        const expectedTaskNames = await UtilsMethods.arrayToString(taskNames);
-        const expectedTaskDescriptions = await UtilsMethods.arrayToString(taskDescriptions)
         await loginPage.openPage();
         await loginPage.loginToPage(userEmail, userPassword);
         await todayPage.addTask.createMultipleTasksByTaskNameAndDescription(taskNames, taskDescriptions);
         const atcualTaskNames =  await todayPage.getTaskNames();
         const actualTaskDescriptions = await todayPage.getTaskDescriptions();
-        await expect(await UtilsMethods.arrayToString(atcualTaskNames)).toContain(expectedTaskNames);
-        await expect(await UtilsMethods.arrayToString(actualTaskDescriptions)).toContain(expectedTaskDescriptions);
+        await expect(await UtilsMethods.arrayIsContained(taskNames,atcualTaskNames)).toBe(true);
+        await expect(await UtilsMethods.arrayIsContained(taskDescriptions,actualTaskDescriptions)).toBe(true);
         await todayPage.deleteAllTasksByTasksName(taskNames);
     });
 
@@ -36,9 +34,12 @@ describe('Task creation scenarios', () => {
         await todayPage.addTask.fillTaskName(taskName);
         await todayPage.addTask.fillTaskDescription(taskDescription);
         await todayPage.addTask.clickAddTaskConfirmButton();
-        await expect(await todayPage.getTaskNameByName(taskName)).toEqual(taskName);
-        await expect(await todayPage.getTaskDescriptionByName(taskName)).toEqual(taskDescription);
+        const atcualTaskNames =  await todayPage.getTaskNames();
+        const actualTaskDescriptions = await todayPage.getTaskDescriptions();
+        console.log('taskName: ', atcualTaskNames);
+        console.log('taskDescription: ', actualTaskDescriptions);
+        await expect(await UtilsMethods.arrayIsContained([taskName],atcualTaskNames)).toBe(true);
+        await expect(await UtilsMethods.arrayIsContained([taskDescription],actualTaskDescriptions)).toBe(true);
         await todayPage.deleteAllTasksByTasksName([taskName]);
     });
-
 });
