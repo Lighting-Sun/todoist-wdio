@@ -179,7 +179,7 @@ class TodayPage extends Page{
      * @returns Promise<void>
     */
     async deleteAllTasksByTasksName(taskNames : Array<string>): Promise<void> {
-        for await (const taskName of taskNames) {
+        for (const taskName of taskNames) {
             await this.hoverOverTaskContainerByName(taskName);
             await this.hoverOverTaskMoreMenuByName(taskName);
             await this.clickOnTaskMoreMenuButtonByName(taskName);

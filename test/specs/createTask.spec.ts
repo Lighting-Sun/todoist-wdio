@@ -36,6 +36,8 @@ describe('Task creation scenarios', () => {
         await todayPage.addTask.clickAddTaskConfirmButton();
         const atcualTaskNames =  await todayPage.getTaskNames();
         const actualTaskDescriptions = await todayPage.getTaskDescriptions();
+        console.log('taskName: ', atcualTaskNames);
+        console.log('taskDescription: ', actualTaskDescriptions);
         await expect(await UtilsMethods.arrayIsContained([taskName],atcualTaskNames)).toBe(true);
         await expect(await UtilsMethods.arrayIsContained([taskDescription],actualTaskDescriptions)).toBe(true);
         await todayPage.deleteAllTasksByTasksName([taskName]);
