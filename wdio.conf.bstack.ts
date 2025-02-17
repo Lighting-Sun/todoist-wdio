@@ -11,7 +11,7 @@ let overrides = {
           { browserstackLocal: true, opts: { forceLocal: false } },
         ],
     ],
-    maxInstances: 2,
+    maxInstances: 1,
 
     capabilities: [
         {
