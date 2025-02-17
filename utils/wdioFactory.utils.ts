@@ -129,6 +129,7 @@ export default class WdioFactoryUtils {
         const elementSelector = $(objElement.selector);
         const elementDescription = objElement.description;
         await elementSelector.waitForExist({timeoutMsg: `Element ${elementDescription} is not found before timeout`});
+        await elementSelector.scrollIntoView({behavior :'smooth'});
         await elementSelector.moveTo();
     }
 
